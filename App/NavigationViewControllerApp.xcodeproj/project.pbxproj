@@ -20,6 +20,7 @@
 		F8588B7A26465D1E000DF7AE /* NavigationExplorer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8588B7726465CF2000DF7AE /* NavigationExplorer.framework */; };
 		F8588B7B26465D1E000DF7AE /* NavigationExplorer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F8588B7726465CF2000DF7AE /* NavigationExplorer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F8588B7D26465D8B000DF7AE /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8588B7C26465D8B000DF7AE /* Items.swift */; };
+		F8588B9C264995A8000DF7AE /* SixthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8588B99264995A8000DF7AE /* SixthViewController.swift */; };
 		F858E49825C461A8006FF06F /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F858E49525C461A8006FF06F /* FirstViewController.swift */; };
 		F8DFEE172640871E005E1EF1 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8DFEE162640871E005E1EF1 /* Media.xcassets */; };
 		F8DFEE1B26408A41005E1EF1 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DFEE1A26408A41005E1EF1 /* SecondViewController.swift */; };
@@ -74,6 +75,7 @@
 		F85414AE263ABB8A0073F564 /* FifthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FifthViewController.swift; sourceTree = "<group>"; };
 		F8588B7126465CF1000DF7AE /* NavigationExplorer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NavigationExplorer.xcodeproj; path = ../NavigationExplorer.xcodeproj; sourceTree = "<group>"; };
 		F8588B7C26465D8B000DF7AE /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
+		F8588B99264995A8000DF7AE /* SixthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SixthViewController.swift; sourceTree = "<group>"; };
 		F858E49525C461A8006FF06F /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		F8DFEE162640871E005E1EF1 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		F8DFEE1A26408A41005E1EF1 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				F84BE33125BB6F12006BE155 /* ThirdViewController.swift */,
 				AE3B64A226134BC700A301B2 /* FourthViewController.swift */,
 				F85414AE263ABB8A0073F564 /* FifthViewController.swift */,
+				F8588B99264995A8000DF7AE /* SixthViewController.swift */,
 				F8DFEE2126408E75005E1EF1 /* CollectionViewCell.swift */,
 				F84BE33325BB6F12006BE155 /* Main.storyboard */,
 				F8DFEE1E26408E44005E1EF1 /* CollectionViewCell.xib */,
@@ -249,6 +252,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8588B9C264995A8000DF7AE /* SixthViewController.swift in Sources */,
 				F84BE33225BB6F12006BE155 /* ThirdViewController.swift in Sources */,
 				F85414AD263AA7C00073F564 /* InnerViewController.swift in Sources */,
 				F825C64D262C500900281BC2 /* TableViewController.swift in Sources */,

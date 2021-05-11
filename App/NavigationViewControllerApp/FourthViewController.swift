@@ -11,7 +11,7 @@ class FourthViewController: TableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("Third view controller")
+        print("Fourth view controller")
         navigationViewController?.type = .privacyCategories
         navigationViewController?.navigationDelegate = self
         navigationViewController?.collectionViewDelegate = self

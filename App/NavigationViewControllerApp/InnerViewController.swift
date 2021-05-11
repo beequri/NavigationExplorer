@@ -9,6 +9,7 @@ import UIKit
 
 extension Notification.Name {
     static let didAppearInnerView = Notification.Name("didAppearInnerView")
+    static let didAppearSixthView = Notification.Name("didAppearSixthView")
 }
 
 class InnerViewController: UIViewController {

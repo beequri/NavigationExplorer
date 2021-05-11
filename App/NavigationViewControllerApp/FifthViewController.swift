@@ -5,7 +5,7 @@ class FifthViewController: TableViewController {
     override func loadView() {
         super.loadView()
         infoBarStatus = .shown
-        title = "Fifthe view controller"
+        title = "Fifth view controller"
     }
     
     override func viewWillAppear(_ animated: Bool) {

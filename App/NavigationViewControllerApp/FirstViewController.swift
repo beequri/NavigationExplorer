@@ -5,7 +5,7 @@ class FirstViewController: TableViewController {
     
     lazy var innerViewController: InnerViewController = {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewController(identifier: "Inner vc") as InnerViewController
+        let controller = storyboard.instantiateViewController(identifier: "Inner View Controller") as InnerViewController
         return controller
     }()
     
@@ -57,7 +57,7 @@ class FirstViewController: TableViewController {
         }
     }
     
-    @objc private func showInnerView() {
+    private func showInnerView() {
         addChild(innerViewController)
         view.addSubview(innerViewController.view)
         innerViewController.view.transform = CGAffineTransform(translationX: 0, y: 1000)
