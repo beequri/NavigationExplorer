@@ -5,6 +5,11 @@ class ThirdViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    let titles1 = ["Private and Categories", "Inner View", "Second Navigation View"]
+    let titles2 = ["Hide Navigation", "Show Navigation"]
+    let images1 = ["arrow.right.square", "arrow.up.square", "rectangle.on.rectangle"]
+    let images2 = ["rectangle","rectangle.topthird.inset"]
+    
     var lastContentOffset: CGFloat = 0
     var infoBarStatus: InfoBarStatus  = .hidden
     var navigationViewController: NavigationViewController? {
@@ -90,15 +95,45 @@ class ThirdViewController: UIViewController {
         navigationViewController?.requestToUpdateTitleView(animated: true)
         title = "Sixth view"
     }
+    
+    private func showModalNavigationView() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "Second Navigation")
+        vc.modalPresentationStyle = .overFullScreen
+        vc.view.alpha = 0.1
+        present(vc, animated: false)
+    }
 }
 extension ThirdViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        if section == 0 {
+            return 3
+        }
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "hello"
+        if indexPath.section == 0 {
+            if let img = UIImage(systemName: images1[indexPath.row]) {
+                cell.imageView?.image = img
+                cell.tintColor = .black
+            }
+            cell.backgroundColor = .systemTeal
+            cell.textLabel?.text = titles1[indexPath.row]
+        } else {
+            if let img = UIImage(systemName: images2[indexPath.row]) {
+                cell.imageView?.image = img
+                cell.tintColor = .white
+            }
+            cell.textLabel?.textColor = .white
+            cell.backgroundColor = .systemPink
+            cell.textLabel?.text = titles2[indexPath.row]
+        }
         return cell
     }
 }
@@ -108,6 +143,9 @@ extension ThirdViewController: UITableViewDelegate {
         if indexPath.section == 0 {
             if indexPath.row == 1 {
                 showInnerView()
+            }
+            if indexPath.row == 2 {
+                showModalNavigationView()
             }
         }
         
