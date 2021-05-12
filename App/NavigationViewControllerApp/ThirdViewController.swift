@@ -98,10 +98,20 @@ class ThirdViewController: UIViewController {
     
     private func showModalNavigationView() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "Second Navigation")
-        vc.modalPresentationStyle = .overFullScreen
-        vc.view.alpha = 0.1
-        present(vc, animated: false)
+        guard let navigation = storyboard.instantiateViewController(withIdentifier: "Second Navigation") as? NavigationViewController else {
+            return
+        }
+        guard let first = navigation.viewControllers.first as? SixthViewController else {
+            return
+        }
+        navigation.modalPresentationStyle = .overFullScreen
+        navigation.view.alpha = 0
+        present(navigation, animated: false) {
+            UIView.animate(withDuration: 0.3) {
+                navigation.view.alpha = 1
+                first.view.backgroundColor = .white
+            }
+        }
     }
 }
 extension ThirdViewController: UITableViewDataSource {
