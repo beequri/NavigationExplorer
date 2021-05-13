@@ -16,6 +16,15 @@ class ThirdViewController: UIViewController {
         navigationController as? NavigationViewController
     }
     
+    lazy var secondNavigationViewController: NavigationViewController? = {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        return storyboard.instantiateViewController(withIdentifier: "Second Navigation") as? NavigationViewController
+    }()
+    
+    lazy var sixthViewController: SixthViewController? = {
+        secondNavigationViewController?.viewControllers.first as? SixthViewController
+    }()
+    
     lazy var innerViewController: SixthViewController = {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(identifier: "Sixth View Controller") as SixthViewController
@@ -97,11 +106,10 @@ class ThirdViewController: UIViewController {
     }
     
     private func showModalNavigationView() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let navigation = storyboard.instantiateViewController(withIdentifier: "Second Navigation") as? NavigationViewController else {
+        guard let navigation = secondNavigationViewController else {
             return
         }
-        guard let first = navigation.viewControllers.first as? SixthViewController else {
+        guard let sixthVC = sixthViewController else {
             return
         }
         navigation.modalPresentationStyle = .overFullScreen
@@ -109,7 +117,7 @@ class ThirdViewController: UIViewController {
         present(navigation, animated: false) {
             UIView.animate(withDuration: 0.3) {
                 navigation.view.alpha = 1
-                first.view.backgroundColor = .white
+                sixthVC.view.backgroundColor = .white
             }
         }
     }
@@ -121,7 +129,7 @@ extension ThirdViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 3
+            return 2
         }
         return 2
     }
@@ -152,9 +160,6 @@ extension ThirdViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             if indexPath.row == 1 {
-                showInnerView()
-            }
-            if indexPath.row == 2 {
                 showModalNavigationView()
             }
         }
