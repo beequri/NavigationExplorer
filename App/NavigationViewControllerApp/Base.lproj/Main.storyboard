@@ -740,7 +740,7 @@
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Sgd-Ua-nPo"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="gi7-rn-IBW" firstAttribute="bottom" secondItem="Sgd-Ua-nPo" secondAttribute="bottom" id="XmN-PH-KjH"/>
                             <constraint firstItem="gi7-rn-IBW" firstAttribute="top" secondItem="Sgd-Ua-nPo" secondAttribute="top" id="t1P-vP-Iaj"/>

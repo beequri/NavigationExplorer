@@ -5,9 +5,9 @@ class ThirdViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let titles1 = ["Private and Categories", "Inner View", "Second Navigation View"]
+    let titles1 = ["Private and Categories", "Second Navigation View"]
     let titles2 = ["Hide Navigation", "Show Navigation"]
-    let images1 = ["arrow.right.square", "arrow.up.square", "rectangle.on.rectangle"]
+    let images1 = ["arrow.right.square", "rectangle.on.rectangle"]
     let images2 = ["rectangle","rectangle.topthird.inset"]
     
     var lastContentOffset: CGFloat = 0
@@ -19,10 +19,6 @@ class ThirdViewController: UIViewController {
     lazy var secondNavigationViewController: NavigationViewController? = {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "Second Navigation") as? NavigationViewController
-    }()
-    
-    lazy var sixthViewController: SixthViewController? = {
-        secondNavigationViewController?.viewControllers.first as? SixthViewController
     }()
     
     lazy var innerViewController: SixthViewController = {
@@ -109,17 +105,8 @@ class ThirdViewController: UIViewController {
         guard let navigation = secondNavigationViewController else {
             return
         }
-        guard let sixthVC = sixthViewController else {
-            return
-        }
         navigation.modalPresentationStyle = .overFullScreen
-        navigation.view.alpha = 0
-        present(navigation, animated: false) {
-            UIView.animate(withDuration: 0.3) {
-                navigation.view.alpha = 1
-                sixthVC.view.backgroundColor = .white
-            }
-        }
+        present(navigation, animated: false)
     }
 }
 extension ThirdViewController: UITableViewDataSource {

@@ -26,6 +26,9 @@ class SixthViewController: UIViewController {
     override func loadView() {
         super.loadView()
         title = "Sixth view controller"
+        
+        navigationViewController?.view.alpha = 0
+        view.alpha = 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,6 +42,16 @@ class SixthViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        UIView.animate(withDuration: 0.35) {
+            self.navigationViewController?.view.alpha = 1
+        } completion: { _ in
+            UIView.animate(withDuration: 0.5) {
+                self.view.alpha = 1
+            }
+        }
+
+        
         NotificationCenter.default.post(name: .didAppearSixthView, object: nil)
     }
     
