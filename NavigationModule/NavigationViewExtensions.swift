@@ -30,12 +30,12 @@
 import UIKit
 
 extension NavigationView {
-    public func showCategoriesForPortraitWithAnimation() {
-        showCategoriesForPortrait(animation: true)
+    public func showCategoriesForPortraitWithAnimation(completion: (()->())? = nil) {
+        showCategoriesForPortrait(animation: true, completion: completion)
     }
     
-    public func hideCategoriesForPortraitWithAnimation() {
-        hideCategoriesForPortrait(animation: true)
+    public func hideCategoriesForPortraitWithAnimation(completion: (()->())? = nil) {
+        hideCategoriesForPortrait(animation: true, completion: completion)
     }
     
     public func showCategoriesForPortraitWithoutAnimation() {
@@ -46,12 +46,12 @@ extension NavigationView {
         hideCategoriesForPortrait(animation: false)
     }
     
-    public func showCategoriesForLandscapeWithAnimation() {
-        showCategoriesForLandscape(animation: true)
+    public func showCategoriesForLandscapeWithAnimation(completion: (()->())? = nil) {
+        showCategoriesForLandscape(animation: true, completion: completion)
     }
     
-    public func hideCategoriesForLandscapeWithAnimation() {
-        hideCategoriesForLandscape(animation: true)
+    public func hideCategoriesForLandscapeWithAnimation(completion: (()->())? = nil) {
+        hideCategoriesForLandscape(animation: true, completion: completion)
     }
     
     public func showCategoriesForLandscapeWithoutAnimation() {

@@ -102,6 +102,28 @@ import UIKit
         })
     }
     
+    public func setCollectionScrollViewHidden(_ hidden: Bool, completion: (()->())? = nil) {
+        if hidden == true {
+            if self.isLandscape == true {
+                self.navigationView?.hideBottomTitleForLandscapeWithAnimation(completion: completion)
+                return
+            }
+            if self.categoryViewHidden == false {
+                self.navigationView?.hideCategoriesForPortraitWithAnimation(completion: completion)
+            }
+            return
+        }
+        
+        if self.isLandscape == true {
+            self.navigationView?.showBottomTitleForLandscapeWithAnimation(completion: completion)
+            return
+        }
+        
+        if self.categoryViewHidden == false {
+            self.navigationView?.showCategoriesForPortraitWithAnimation(completion: completion)
+        }
+    }
+    
     // MARK: - Private
     
     private func showCategories() {

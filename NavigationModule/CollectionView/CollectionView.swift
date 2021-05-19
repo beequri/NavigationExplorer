@@ -217,12 +217,13 @@ public class CollectionView: UIView {
         scrollBar?.updateConstraint(attribute: .height, constant: adjustedHeight)
     }
     
-    func slideOffWithAnimation() {
+    func slideOffWithAnimation(completion: (()->())? = nil) {
         UIView.animate(withDuration: 0.2) {
             self.scrollBarContainer?.transform = CGAffineTransform(translationX: 0, y: -100)
             self.scrollBarContainer?.alpha = 0
         } completion: { _ in
             self.scrollBarContainer?.isHidden = true
+            completion?()
         }
     }
     
@@ -232,11 +233,13 @@ public class CollectionView: UIView {
         scrollBarContainer?.isHidden = true
     }
     
-    func slideInWithAnimation() {
+    func slideInWithAnimation(completion: (()->())? = nil) {
         scrollBarContainer?.isHidden = false
         UIView.animate(withDuration: 0.25) {
             self.scrollBarContainer?.transform = CGAffineTransform(translationX: 0, y: 0)
             self.scrollBarContainer?.alpha = 1
+        } completion: { _ in
+            completion?()
         }
     }
     
@@ -307,4 +310,3 @@ extension  CollectionView: UICollectionViewDelegate {
         collectionView.reloadItems(at: [indexPath])
     }
 }
-

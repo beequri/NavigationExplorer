@@ -49,7 +49,6 @@ class NavigationView {
     @objc  public var collectionView: CollectionView?
     
     private var bottomTitleView: BottomTitleView?
-    
     private var bottomLine: UIView?
     private var upperTitleView: UIView?
     private var blurView: UIVisualEffectView?
@@ -234,21 +233,27 @@ class NavigationView {
         }
     }
     
-    public func showBottomTitleForLandscapeWithAnimation() {
-        guard let bottomTitleContainer = bottomTitleView?.bottomTitleContainer, let loginBar = infoBar else {
+    public func showBottomTitleForLandscapeWithAnimation(completion: (()->())? = nil) {
+        guard let bottomTitleContainer = bottomTitleView?.bottomTitleContainer,
+              let bottomTitleLabel = bottomTitleLabel,
+              let loginBar = infoBar else {
             return
         }
         
         UIView.animate(withDuration: 0.25) {
-            bottomTitleContainer.transform = CGAffineTransform(translationX: 0, y: 0 + self.currentPrivacyBarHeight)
+            bottomTitleLabel.transform = CGAffineTransform(translationX: 0, y: 0)
             bottomTitleContainer.alpha = 1
             loginBar.layer.shadowOpacity = 1
             self.upperTitleView?.alpha = 0
+        } completion: { _ in
+            completion?()
         }
     }
     
-    public func hideBottomTitleForLandscapeWithAnimation() {
-        guard let bottomTitleContainer = bottomTitleView?.bottomTitleContainer, let loginBar = infoBar else {
+    public func hideBottomTitleForLandscapeWithAnimation(completion: (()->())? = nil) {
+        guard let bottomTitleContainer = bottomTitleView?.bottomTitleContainer,
+              let bottomTitleLabel = bottomTitleLabel,
+              let loginBar = infoBar else {
             return
         }
         
@@ -258,35 +263,37 @@ class NavigationView {
         }
         
         UIView.animate(withDuration: 0.2) {
-            bottomTitleContainer.transform = CGAffineTransform(translationX: 0, y: -40)
+            bottomTitleLabel.transform = CGAffineTransform(translationX: 0, y: -40)
             bottomTitleContainer.alpha = 0
             loginBar.layer.shadowOpacity = 0
             
             if self.stateConfiguration.categoryBarHidden == true {
                 self.upperTitleView?.alpha = 1
             }
+        } completion: { _ in
+            completion?()
         }
     }
     
-    public func hideCategoriesForLandscape(animation:Bool) {
+    public func hideCategoriesForLandscape(animation:Bool, completion: (()->())? = nil) {
         if animation == false {
             collectionView?.slideOffWithoutAnimation()
             return
         }
         
-        collectionView?.slideOffWithAnimation()
+        collectionView?.slideOffWithAnimation(completion: completion)
     }
     
-    public func showCategoriesForLandscape(animation:Bool) {
+    public func showCategoriesForLandscape(animation:Bool, completion: (()->())? = nil) {
         if animation == false {
             collectionView?.slideInWithoutAnimation()
             return
         }
         
-        collectionView?.slideInWithAnimation()
+        collectionView?.slideInWithAnimation(completion: completion)
     }
     
-    public func showCategoriesForPortrait(animation:Bool) {
+    public func showCategoriesForPortrait(animation:Bool, completion: (()->())? = nil) {
         guard let infoContainerBar = infoContainerBar else {
             return
         }
@@ -324,10 +331,11 @@ class NavigationView {
             self.view?.layoutIfNeeded()
         } completion: { _ in
             self.collectionView?.loadCategories()
+            completion?()
         }
     }
     
-    public func hideCategoriesForPortrait(animation:Bool) {
+    public func hideCategoriesForPortrait(animation:Bool, completion: (()->())? = nil) {
         guard let infoContainerBar = infoContainerBar else {
             return
         }
@@ -363,6 +371,8 @@ class NavigationView {
             self.infoContainerBar?.transform = CGAffineTransform(translationX: 0, y: defaultValue)
             self.bottomLine?.alpha = 1
             self.view?.layoutIfNeeded()
+        } completion: { _ in
+            completion?()
         }
     }
     

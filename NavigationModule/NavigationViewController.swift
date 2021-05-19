@@ -183,6 +183,17 @@ import UIKit
         }
     }
     
+    @objc public func setCollectionScrollViewHidden(_ hidden: Bool, completion: (()->())? = nil) {
+        switch currentNavigationController {
+        case is CollectionNavigationController:
+            collectionNavigationController.setCollectionScrollViewHidden(hidden, completion: completion)
+            return
+            
+        default:
+            return
+        }
+    }
+    
     // MARK: - Private
     
     private func notifyViewWillAppear() {
