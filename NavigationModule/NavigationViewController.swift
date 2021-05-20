@@ -183,10 +183,10 @@ import UIKit
         }
     }
     
-    @objc public func setCollectionScrollViewHidden(_ hidden: Bool, completion: (()->())? = nil) {
+    @objc public func setCollectionScrollViewHidden(_ hidden: Bool) {
         switch currentNavigationController {
         case is CollectionNavigationController:
-            collectionNavigationController.setCollectionScrollViewHidden(hidden, completion: completion)
+            collectionNavigationController.setCollectionScrollViewHidden(hidden)
             return
             
         default:

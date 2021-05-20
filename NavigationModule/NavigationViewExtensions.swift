@@ -31,11 +31,11 @@ import UIKit
 
 extension NavigationView {
     public func showCategoriesForPortraitWithAnimation(completion: (()->())? = nil) {
-        showCategoriesForPortrait(animation: true, completion: completion)
+        showCategoriesForPortrait(animation: true)
     }
     
     public func hideCategoriesForPortraitWithAnimation(completion: (()->())? = nil) {
-        hideCategoriesForPortrait(animation: true, completion: completion)
+        hideCategoriesForPortrait(animation: true)
     }
     
     public func showCategoriesForPortraitWithoutAnimation() {
@@ -47,11 +47,11 @@ extension NavigationView {
     }
     
     public func showCategoriesForLandscapeWithAnimation(completion: (()->())? = nil) {
-        showCategoriesForLandscape(animation: true, completion: completion)
+        showCategoriesForLandscape(animation: true)
     }
     
     public func hideCategoriesForLandscapeWithAnimation(completion: (()->())? = nil) {
-        hideCategoriesForLandscape(animation: true, completion: completion)
+        hideCategoriesForLandscape(animation: true)
     }
     
     public func showCategoriesForLandscapeWithoutAnimation() {

@@ -233,7 +233,7 @@ class NavigationView {
         }
     }
     
-    public func showBottomTitleForLandscapeWithAnimation(completion: (()->())? = nil) {
+    public func showBottomTitleForLandscapeWithAnimation() {
         guard let bottomTitleContainer = bottomTitleView?.bottomTitleContainer,
               let bottomTitleLabel = bottomTitleLabel,
               let loginBar = infoBar else {
@@ -245,12 +245,10 @@ class NavigationView {
             bottomTitleContainer.alpha = 1
             loginBar.layer.shadowOpacity = 1
             self.upperTitleView?.alpha = 0
-        } completion: { _ in
-            completion?()
         }
     }
     
-    public func hideBottomTitleForLandscapeWithAnimation(completion: (()->())? = nil) {
+    public func hideBottomTitleForLandscapeWithAnimation() {
         guard let bottomTitleContainer = bottomTitleView?.bottomTitleContainer,
               let bottomTitleLabel = bottomTitleLabel,
               let loginBar = infoBar else {
@@ -270,30 +268,28 @@ class NavigationView {
             if self.stateConfiguration.categoryBarHidden == true {
                 self.upperTitleView?.alpha = 1
             }
-        } completion: { _ in
-            completion?()
         }
     }
     
-    public func hideCategoriesForLandscape(animation:Bool, completion: (()->())? = nil) {
+    public func hideCategoriesForLandscape(animation:Bool) {
         if animation == false {
             collectionView?.slideOffWithoutAnimation()
             return
         }
         
-        collectionView?.slideOffWithAnimation(completion: completion)
+        collectionView?.slideOffWithAnimation()
     }
     
-    public func showCategoriesForLandscape(animation:Bool, completion: (()->())? = nil) {
+    public func showCategoriesForLandscape(animation:Bool) {
         if animation == false {
             collectionView?.slideInWithoutAnimation()
             return
         }
         
-        collectionView?.slideInWithAnimation(completion: completion)
+        collectionView?.slideInWithAnimation()
     }
     
-    public func showCategoriesForPortrait(animation:Bool, completion: (()->())? = nil) {
+    public func showCategoriesForPortrait(animation:Bool) {
         guard let infoContainerBar = infoContainerBar else {
             return
         }
@@ -331,11 +327,10 @@ class NavigationView {
             self.view?.layoutIfNeeded()
         } completion: { _ in
             self.collectionView?.loadCategories()
-            completion?()
         }
     }
     
-    public func hideCategoriesForPortrait(animation:Bool, completion: (()->())? = nil) {
+    public func hideCategoriesForPortrait(animation:Bool) {
         guard let infoContainerBar = infoContainerBar else {
             return
         }
@@ -371,8 +366,6 @@ class NavigationView {
             self.infoContainerBar?.transform = CGAffineTransform(translationX: 0, y: defaultValue)
             self.bottomLine?.alpha = 1
             self.view?.layoutIfNeeded()
-        } completion: { _ in
-            completion?()
         }
     }
     
