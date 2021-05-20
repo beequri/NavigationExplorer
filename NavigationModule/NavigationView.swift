@@ -45,7 +45,7 @@ class NavigationView {
     
     private weak var navigationViewController: NavigationViewController?
     
-    @objc  public var navigationPrivacyBar: NavigationInfoBar?
+    @objc  public var navigationInfoBar: NavigationInfoBar?
     @objc  public var collectionView: CollectionView?
     
     private var bottomTitleView: BottomTitleView?
@@ -56,7 +56,7 @@ class NavigationView {
     private var privacyStatus: InfoBarStatus = .hidden
     public var hideInfoBarAction: (()->())? {
         didSet {
-            navigationPrivacyBar?.hideInfoBarAction = hideInfoBarAction
+            navigationInfoBar?.hideInfoBarAction = hideInfoBarAction
         }
     }
     
@@ -209,14 +209,24 @@ class NavigationView {
         }
     }
     
-    public func changePrivacyBar(status: InfoBarStatus, completion:(()->())?) {
+    public func changeInfoBar(status: InfoBarStatus, animated:Bool, completion:(()->())?) {
         privacyStatus = status
         
         switch privacyStatus {
         case .shown:
-            revealPrivacyBar(completion: completion)
+            if animated == true {
+                revealInfoBarWithAnimation(completion: completion)
+                return
+            }
+            revealInfoBarWithoutAnimation()
+            completion?()
         default:
-            hidePrivacyBar(completion: completion)
+            if animated == true {
+                hideInfoBarWithAnimation(completion: completion)
+                return
+            }
+            hideInfoBarWithoutAnimation()
+            completion?()
         }
     }
     
@@ -371,7 +381,17 @@ class NavigationView {
     
     // MARK: Private
     
-    private func revealPrivacyBar(completion:(()->())?) {
+    private func revealInfoBarWithoutAnimation() {
+        let constant = isLandscape ? loginShadowHeight : loginShadowHeight + loginBarHeight
+        infoContainerBar?.updateConstraint(attribute: .height, constant: constant)
+        infoBar?.transform = CGAffineTransform(translationX: 0, y: 0)
+        if isLandscape {
+            bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: loginBarHeight)
+        }
+        view?.layoutIfNeeded()
+    }
+    
+    private func revealInfoBarWithAnimation(completion:(()->())?) {
         let constant = isLandscape ? loginShadowHeight : loginShadowHeight + loginBarHeight
         infoContainerBar?.updateConstraint(attribute: .height, constant: constant)
         UIView.animate(withDuration: 0.25) {
@@ -385,7 +405,16 @@ class NavigationView {
         }
     }
     
-    private func hidePrivacyBar(completion:(()->())?) {
+    private func hideInfoBarWithoutAnimation() {
+        infoContainerBar?.updateConstraint(attribute: .height, constant: loginShadowHeight)
+        infoBar?.transform = CGAffineTransform(translationX: 0, y: loginBarHeight * -1)
+        if isLandscape {
+            bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: 0)
+        }
+        view?.layoutIfNeeded()
+    }
+    
+    private func hideInfoBarWithAnimation(completion:(()->())?) {
         infoContainerBar?.updateConstraint(attribute: .height, constant: loginShadowHeight)
         UIView.animate(withDuration: 0.25) {
             self.infoBar?.transform = CGAffineTransform(translationX: 0, y: loginBarHeight * -1)
@@ -446,8 +475,8 @@ class NavigationView {
         collectionView = categoryViewController
         collectionView?.dataSource = collectionViewControllerDataSource
         
-        let privacyBarController = NavigationInfoBar(viewConfiguration: viewConfiguration)
-        navigationPrivacyBar = privacyBarController
+        let infoBarController = NavigationInfoBar(viewConfiguration: viewConfiguration)
+        navigationInfoBar = infoBarController
         
         let titleView = BottomTitleView(viewConfiguration: viewConfiguration)
         bottomTitleView = titleView
@@ -469,7 +498,7 @@ class NavigationView {
     
     private func viewSetup() {
         // Privacy bar
-        navigationPrivacyBar?.setup()
+        navigationInfoBar?.setup()
         bottomTitleView?.setup()
         collectionView?.setup()
         
@@ -493,7 +522,7 @@ class NavigationView {
         
         bottomTitleView?.clean()
         collectionView?.clean()
-        navigationPrivacyBar?.clean()
+        navigationInfoBar?.clean()
     }
     
     private func hideScrollView() {
@@ -683,16 +712,16 @@ extension NavigationView {
     }
     
     public var infoContainerBar: UIView? {
-        navigationPrivacyBar?.infoContainerBar
+        navigationInfoBar?.infoContainerBar
     }
     
     // MARK: Private
-    private var currentPrivacyBarHeight: CGFloat {
+    private var currentInfoBarHeight: CGFloat {
         return privacyStatus == .shown ? loginBarHeight : 0
     }
     
     private var infoBar: UIView? {
-        navigationPrivacyBar?.infoBar
+        navigationInfoBar?.infoBar
     }
     
     private var bar: UINavigationBar? {

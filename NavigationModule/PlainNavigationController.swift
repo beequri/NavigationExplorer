@@ -38,8 +38,8 @@ import UIKit
 
 @objc public protocol InfoBarDelegate: AnyObject {
     func didRequestInfoBarStatus() -> InfoBarStatus
-    func didRequestToHideInfoBar(controller: PlainNavigationController)
-    func didChangeInfoBarStatus(controller: PlainNavigationController, infoBarStatus: InfoBarStatus)
+    func didRequestToHideInfoBar()
+    func didChangeInfoBarStatus(infoBarStatus: InfoBarStatus)
 }
 
 @objc public class PlainNavigationController: NSObject {
@@ -50,7 +50,7 @@ import UIKit
     
     var adjustNavigationTimer: Timer?
     var showHideCategoriesTimer: Timer?
-    var privacyBarHidden: Bool = false
+    var infoBarHidden: Bool = false
     var infoBarStatus: InfoBarStatus = .hidden
     var currentInfoBarStatus: InfoBarStatus {
         infoBarDelegate?.didRequestInfoBarStatus() ?? .hidden
@@ -72,7 +72,7 @@ import UIKit
     }
     
     @objc public var infoBar: NavigationInfoBar? {
-        navigationView?.navigationPrivacyBar
+        navigationView?.navigationInfoBar
     }
     
     @objc public var categoryScrollView: CollectionView? {
@@ -99,7 +99,7 @@ import UIKit
     }
     
     public func viewWillAppear() {
-        hideCategoriesWithoutAnimationIfNeeded()
+        hideCategories(animated: false)
     }
     
     public func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -108,7 +108,7 @@ import UIKit
         }
         
         self.navigationView?.willTransition(to: newCollection, with: coordinator, navigationType: .plain, completion: {
-            self.evaluateInfoBarStatus()
+            self.evaluateInfoBarStatus(animated: true)
         })
     }
     
@@ -130,7 +130,7 @@ import UIKit
     
     public func recreate(type: NavigationType) {
         navigationView?.recreateNavigation(for: type)
-        evaluateInfoBarStatus()
+        evaluateInfoBarStatus(animated: true)
         navigationControllerDelegate?.navigationDidAppear(controller: self)
     }
     
@@ -143,7 +143,7 @@ import UIKit
         navigationView?.collectionViewControllerDataSource = self
         navigationView?.prepareToShow()
         navigationView?.hideInfoBarAction = {
-            self.infoBarDelegate?.didRequestToHideInfoBar(controller: self)
+            self.infoBarDelegate?.didRequestToHideInfoBar()
         }
     }
     
@@ -165,54 +165,54 @@ import UIKit
         })
     }
     
-    @objc public func evaluateInfoBarStatus() {
+    @objc public func evaluateInfoBarStatus(animated: Bool) {
         var changeNotification = false
         if infoBarStatus != currentInfoBarStatus {
             changeNotification = true
             infoBarStatus = currentInfoBarStatus
         }
         
-        changePrivacyBar(status: infoBarStatus, changeNotification: changeNotification)
+        changeInfoBar(status: infoBarStatus, animated:animated, changeNotification: changeNotification)
     }
     
-    public func hideCategoriesWithAnimation() {
-        isLandscape
-            ? navigationView?.hideCategoriesForLandscapeWithAnimation()
-            : navigationView?.hideCategoriesForPortraitWithAnimation()
-    }
-    
-    public func shouldHidePrivacyBar(_ hidden: Bool) {
-        privacyBarHidden = hidden
-        showPrivacyBarIfNeeded()
-        hidePrivacyBarIfNeeded()
-    }
-    
-    // MARK: - Private
-    
-    private func hideCategoriesWithoutAnimationIfNeeded() {
+    public func hideCategories(animated: Bool) {
+        if animated == true {
+            isLandscape
+                ? navigationView?.hideCategoriesForLandscapeWithAnimation()
+                : navigationView?.hideCategoriesForPortraitWithAnimation()
+            return
+        }
         isLandscape
             ? navigationView?.hideCategoriesForLandscapeWithoutAnimation()
             : navigationView?.hideCategoriesForPortraitWithoutAnimation()
     }
     
-    private func showPrivacyBarIfNeeded() {
-        guard privacyBarHidden == false else {
-            return
-        }
-        evaluateInfoBarStatus()
+    public func shouldHideInfoBar(_ hidden: Bool) {
+        infoBarHidden = hidden
+        showInfoBarIfNeeded()
+        hideInfoBarIfNeeded()
     }
     
-    private func hidePrivacyBarIfNeeded() {
-        guard privacyBarHidden == true else {
+    // MARK: - Private
+    
+    private func showInfoBarIfNeeded() {
+        guard infoBarHidden == false else {
             return
         }
-        changePrivacyBar(status: .hidden, changeNotification: false)
+        evaluateInfoBarStatus(animated: true)
     }
     
-    private func changePrivacyBar(status: InfoBarStatus, changeNotification: Bool) {
-        navigationView?.changePrivacyBar(status: status, completion: {
+    private func hideInfoBarIfNeeded() {
+        guard infoBarHidden == true else {
+            return
+        }
+        changeInfoBar(status: .hidden, animated: true, changeNotification: false)
+    }
+    
+    private func changeInfoBar(status: InfoBarStatus, animated:Bool, changeNotification: Bool) {
+        navigationView?.changeInfoBar(status: status, animated: animated, completion: {
             if changeNotification {
-                self.infoBarDelegate?.didChangeInfoBarStatus(controller: self, infoBarStatus: self.infoBarStatus)
+                self.infoBarDelegate?.didChangeInfoBarStatus(infoBarStatus: self.infoBarStatus)
             }
             self.navigationControllerDelegate?.navigationDidUpdate(controller: self)
         })
@@ -226,7 +226,7 @@ import UIKit
                                      type: NavigationType) {
         prepareToShow()
         if let leftButton = navigationControllerDelegate?.didRequestLeftBarButton() {
-            viewController.navigationItem.setLeftBarButton(leftButton, animated: true)
+            viewController.navigationItem.setLeftBarButton(leftButton, animated: animated)
         }
         
         navigationView?.navigationController(navigationController,
@@ -236,12 +236,10 @@ import UIKit
         
         showHideCategoriesTimer?.invalidate()
         showHideCategoriesTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: { _ in
-            self.hideCategoriesWithAnimation()
+            self.hideCategories(animated: animated)
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.evaluateInfoBarStatus()
-        }
+        self.evaluateInfoBarStatus(animated: false)
     }
     
     public func navigationController(_ navigationController: UINavigationController,

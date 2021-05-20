@@ -48,7 +48,7 @@ import UIKit
         }
         
         self.navigationView?.willTransition(to: newCollection, with: coordinator, navigationType: .custom, completion: {
-            self.evaluateInfoBarStatus()
+            self.evaluateInfoBarStatus(animated: true)
         })
     }
     
@@ -71,12 +71,10 @@ import UIKit
         
         showHideCategoriesTimer?.invalidate()
         showHideCategoriesTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: { _ in
-            self.hideCategoriesWithAnimation()
+            self.hideCategories(animated: animated)
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.evaluateInfoBarStatus()
-        }
+        self.evaluateInfoBarStatus(animated: false)
     }
     
     public override func navigationController(_ navigationController: UINavigationController,

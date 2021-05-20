@@ -72,9 +72,9 @@ import UIKit
         hideCategoriesIfNeeded()
     }
     
-    public func shouldHideCategoryAndPrivacyBars(_ hidden: Bool) {
+    public func shouldHideCategoryAndInfoBars(_ hidden: Bool) {
         shouldHideCategoryBar(hidden)
-        shouldHidePrivacyBar(hidden)
+        shouldHideInfoBar(hidden)
     }
     
     public override func adjustNavigation(action: AdjustAction) {
@@ -160,7 +160,7 @@ import UIKit
         navigationView?.willTransition(to: newCollection, with: coordinator, navigationType: .privacyCategories, completion: {
             self.navigationView?.collectionViewControllerDelegate = self
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.evaluateInfoBarStatus()
+                self.evaluateInfoBarStatus(animated: true)
             }
         })
     }
@@ -187,9 +187,7 @@ import UIKit
             self.showCategories()
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.evaluateInfoBarStatus()
-        }
+        self.evaluateInfoBarStatus(animated: false)
     }
     
     public override func navigationController(_ navigationController: UINavigationController,

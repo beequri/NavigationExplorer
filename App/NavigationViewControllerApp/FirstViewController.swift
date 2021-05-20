@@ -160,12 +160,12 @@ extension FirstViewController:InfoBarDelegate {
         infoBarStatus
     }
     
-    func didRequestToHideInfoBar(controller: PlainNavigationController) {
+    func didRequestToHideInfoBar() {
         infoBarStatus = .hidden
-        controller.evaluateInfoBarStatus()
+        navigationViewController?.evaluateInfoBarStatus()
     }
     
-    func didChangeInfoBarStatus(controller: PlainNavigationController, infoBarStatus: InfoBarStatus) {
+    func didChangeInfoBarStatus(infoBarStatus: InfoBarStatus) {
         //
     }
 }

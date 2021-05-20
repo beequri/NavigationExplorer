@@ -165,7 +165,7 @@ import UIKit
     }
     
     @objc public func evaluateInfoBarStatus() {
-        currentNavigationController.evaluateInfoBarStatus()
+        currentNavigationController.evaluateInfoBarStatus(animated: true)
     }
     
     @objc public func adjustNavigationIfNeeded(action: AdjustAction) {
