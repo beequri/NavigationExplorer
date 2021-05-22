@@ -39,7 +39,7 @@ import UIKit
 @objc public protocol InfoBarDelegate: AnyObject {
     func didRequestInfoBarStatus() -> InfoBarStatus
     func didRequestToHideInfoBar()
-    func didChangeInfoBarStatus(infoBarStatus: InfoBarStatus)
+    func didChangeInfoBar(status: InfoBarStatus)
 }
 
 @objc public class PlainNavigationController: NSObject {
@@ -212,7 +212,7 @@ import UIKit
     private func changeInfoBar(status: InfoBarStatus, animated:Bool, changeNotification: Bool) {
         navigationView?.changeInfoBar(status: status, animated: animated, completion: {
             if changeNotification {
-                self.infoBarDelegate?.didChangeInfoBarStatus(infoBarStatus: self.infoBarStatus)
+                self.infoBarDelegate?.didChangeInfoBar(status: self.infoBarStatus)
             }
             self.navigationControllerDelegate?.navigationDidUpdate(controller: self)
         })

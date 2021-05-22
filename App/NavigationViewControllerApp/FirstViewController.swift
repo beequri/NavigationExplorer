@@ -165,7 +165,7 @@ extension FirstViewController:InfoBarDelegate {
         navigationViewController?.evaluateInfoBarStatus()
     }
     
-    func didChangeInfoBarStatus(infoBarStatus: InfoBarStatus) {
+    func didChangeInfoBar(status: InfoBarStatus) {
         //
     }
 }
