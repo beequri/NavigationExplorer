@@ -142,8 +142,8 @@ public class CollectionView: UIView {
         scrollBar?.reloadData()
     }
     
-    func upadateMask() {
-        guard let scrollBarContainer = scrollBarContainer else {
+    func upadateMaskIfNeeded() {
+        guard let scrollBarContainer = scrollBarContainer, UIViewController.isPad == false else {
             return
         }
 

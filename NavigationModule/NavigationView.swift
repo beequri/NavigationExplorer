@@ -45,8 +45,19 @@ class NavigationView {
     
     private weak var navigationViewController: NavigationViewController?
     
-    @objc  public var navigationInfoBar: NavigationInfoBar?
-    @objc  public var collectionView: CollectionView?
+    @objc public var navigationInfoBar: NavigationInfoBar?
+    @objc public var collectionView: CollectionView?
+    @objc public var hidden: Bool {
+        get {
+            guard let bar = bar else {
+                return false
+            }
+            if bar.transform.ty == 0.0 {
+                return false
+            }
+            return true
+        }
+    }
     
     private var bottomTitleView: BottomTitleView?
     private var bottomLine: UIView?
@@ -122,7 +133,7 @@ class NavigationView {
         prepareControllers()
         styling()
         viewSetup()
-        showBar(animated: false)
+        createBar(animated: false, hidden: false)
         collectionView?.loadCategories()
     }
     
@@ -150,32 +161,32 @@ class NavigationView {
         if isHidden {
             let retractionValue = (loginBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
             
-            self.bar?.transform                     = CGAffineTransform(translationX: 0, y: retractionValue)
-            self.infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
-            self.blurView?.transform                = CGAffineTransform(translationX: 0, y: retractionValue)
-            self.bottomLine?.transform              = CGAffineTransform(translationX: 0, y: retractionValue)
-            self.scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: retractionValue)
-            self.bottomTitleContainer?.transform    = CGAffineTransform(translationX: 0, y: retractionValue)
+            bar?.transform                     = CGAffineTransform(translationX: 0, y: retractionValue)
+            infoContainerBar?.transform        = CGAffineTransform(translationX: 0, y: retractionValue)
+            blurView?.transform                = CGAffineTransform(translationX: 0, y: retractionValue)
+            bottomLine?.transform              = CGAffineTransform(translationX: 0, y: retractionValue)
+            scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: retractionValue)
+            bottomTitleContainer?.transform    = CGAffineTransform(translationX: 0, y: retractionValue)
             return
         }
-        self.bar?.transform                     = CGAffineTransform(translationX: 0, y: 0)
-        self.infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: 0)
-        self.blurView?.transform                = CGAffineTransform(translationX: 0, y: 0)
-        self.bottomLine?.transform              = CGAffineTransform(translationX: 0, y: 0)
-        self.scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: 0)
-        self.bottomTitleContainer?.transform    = CGAffineTransform(translationX: 0, y: 0)
+        bar?.transform                     = CGAffineTransform(translationX: 0, y: 0)
+        infoContainerBar?.transform        = CGAffineTransform(translationX: 0, y: 0)
+        blurView?.transform                = CGAffineTransform(translationX: 0, y: 0)
+        bottomLine?.transform              = CGAffineTransform(translationX: 0, y: 0)
+        scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: 0)
+        bottomTitleContainer?.transform    = CGAffineTransform(translationX: 0, y: 0)
     }
     
     public func willTransition(to newCollection: UITraitCollection,
                                with coordinator: UIViewControllerTransitionCoordinator,
                                navigationType: NavigationType,
                                completion: (()->())? = nil) {
-        
+        let isHidden = hidden
         let retractionValue = (loginBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
         
         coordinator.animate(alongsideTransition: { context in
             self.bar?.transform                     = CGAffineTransform(translationX: 0, y: retractionValue)
-            self.infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
+            self.infoContainerBar?.transform        = CGAffineTransform(translationX: 0, y: retractionValue)
             self.blurView?.transform                = CGAffineTransform(translationX: 0, y: retractionValue)
             self.bottomLine?.transform              = CGAffineTransform(translationX: 0, y: retractionValue)
             self.scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -183,7 +194,7 @@ class NavigationView {
         })
         
         delayInMilliseconds(250) {
-            self.recreateNavigation(for: navigationType)
+            self.recreateNavigation(for: navigationType, hidden:isHidden)
             completion?()
         }
     }
@@ -198,12 +209,12 @@ class NavigationView {
         bar?.tintColor = viewConfiguration.tintColor
     }
     
-    public func recreateNavigation(for navigationType: NavigationType) {
+    public func recreateNavigation(for navigationType: NavigationType, hidden: Bool) {
         styling()
         cleanView()
         prepareControllers()
         viewSetup()
-        showBar(animated: true)
+        createBar(animated: true, hidden: hidden)
         delayInMilliseconds(500) {
             self.updateView(for: navigationType)
         }
@@ -535,12 +546,12 @@ class NavigationView {
         view?.layoutIfNeeded()
     }
     
-    private func showBar(animated: Bool) {
+    private func createBar(animated: Bool, hidden: Bool) {
         if isLandscape == true {
-            self.showLandscapeNavigation(animated: animated)
+            self.showLandscapeNavigation(animated: animated, hidden: hidden)
             return
         }
-        self.showPortraitNavigation(animated: animated)
+        self.showPortraitNavigation(animated: animated, hidden: hidden)
     }
     
     private func showPortraitNavigation() {
@@ -570,7 +581,7 @@ class NavigationView {
         view.addConstraints(subview: infoContainerBar, top: yPos, right: 0, bottom: nil, left: 0, height: loginShadowHeight, width: nil)
         
         scrollBarContainer.layoutIfNeeded()
-        collectionView?.upadateMask()
+        collectionView?.upadateMaskIfNeeded()
         
         if stateConfiguration.categoryBarHidden == true {
             hideScrollView()
@@ -579,25 +590,32 @@ class NavigationView {
         }
     }
     
-    private func showPortraitNavigation(animated: Bool) {
+    private func showPortraitNavigation(animated: Bool, hidden: Bool) {
         showPortraitNavigation()
+        
+        let retractionValue = (loginBarHeight + loginShadowHeight + currentScrollHeight + systemNavigationTotalHeight) * -1
+        if hidden {
+            blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
+            bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
+            scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
+            return
+        }
         
         if animated == false {
             return
         }
         
-        let retractionValue             = (loginBarHeight + loginShadowHeight + currentScrollHeight + systemNavigationTotalHeight) * -1
         blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
         bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
         scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
-        infoContainerBar?.alpha      = 0
-
+        infoContainerBar?.alpha         = 0
+        
         UIView.animate(withDuration: 0.25) {
             self.bar?.transform                 = CGAffineTransform(translationX: 0, y: 0)
             self.blurView?.transform            = CGAffineTransform(translationX: 0, y: 0)
             self.bottomLine?.transform          = CGAffineTransform(translationX: 0, y: 0)
             self.scrollBarContainer?.transform  = CGAffineTransform(translationX: 0, y: 0)
-            self.infoContainerBar?.alpha     = 1
+            self.infoContainerBar?.alpha        = 1
         }
     }
     
@@ -636,27 +654,37 @@ class NavigationView {
         
         scrollBarContainer.layoutIfNeeded()
         
-        collectionView?.upadateMask()
+        collectionView?.upadateMaskIfNeeded()
         collectionView?.hideWithoutAnimationIfNeeded()
         hideTitleIfNeeded()
     }
     
-    private func showLandscapeNavigation(animated: Bool) {
+    private func showLandscapeNavigation(animated: Bool, hidden: Bool) {
         showLandscapeNavigation()
+        
+        let retractionValue = (loginBarHeight + loginShadowHeight + systemNavigationTotalHeight) * -1
+        if hidden == true {
+            infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
+            blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
+            scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
+            bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
+            bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: retractionValue)
+            return
+        }
+        
         if animated == false {
             return
         }
         
-        let retractionValue = (loginBarHeight + loginShadowHeight + systemNavigationTotalHeight) * -1
         infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
-        blurView?.transform                = CGAffineTransform(translationX: 0, y: retractionValue)
-        scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: retractionValue)
-        bottomLine?.transform              = CGAffineTransform(translationX: 0, y: retractionValue)
-        bottomTitleContainer?.transform    = CGAffineTransform(translationX: 0, y: retractionValue)
+        blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
+        scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
+        bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
+        bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: retractionValue)
         
         UIView.animate(withDuration: 0.25) {
             self.bar?.transform                     = CGAffineTransform(translationX: 0, y: 0)
-            self.infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: 0)
+            self.infoContainerBar?.transform        = CGAffineTransform(translationX: 0, y: 0)
             self.blurView?.transform                = CGAffineTransform(translationX: 0, y: 0)
             self.scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: 0)
             self.bottomLine?.transform              = CGAffineTransform(translationX: 0, y: 0)

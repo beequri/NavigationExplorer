@@ -48,7 +48,9 @@ import UIKit
         }
         
         self.navigationView?.willTransition(to: newCollection, with: coordinator, navigationType: .custom, completion: {
-            self.evaluateInfoBarStatus(animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.evaluateInfoBarStatus(animated: true)
+            }
         })
     }
     
@@ -74,7 +76,8 @@ import UIKit
             self.hideCategories(animated: animated)
         })
         
-        self.evaluateInfoBarStatus(animated: false)
+        infoBarStatus = infoBarDelegate?.didRequestInfoBarStatus() ?? .hidden
+        evaluateInfoBarStatus(animated: false)
     }
     
     public override func navigationController(_ navigationController: UINavigationController,

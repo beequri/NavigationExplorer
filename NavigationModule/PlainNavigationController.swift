@@ -60,6 +60,10 @@ import UIKit
         return NavigationStateConfiguration()
     }
     
+    var navigationHidden: Bool {
+        navigationView?.hidden ?? false
+    }
+    
     @objc public var expectedTopOffset: CGFloat {
         if currentInfoBarStatus == .shown {
             return loginBarHeight
@@ -108,7 +112,9 @@ import UIKit
         }
         
         self.navigationView?.willTransition(to: newCollection, with: coordinator, navigationType: .plain, completion: {
-            self.evaluateInfoBarStatus(animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.evaluateInfoBarStatus(animated: true)
+            }
         })
     }
     
@@ -129,7 +135,8 @@ import UIKit
     }
     
     public func recreate(type: NavigationType) {
-        navigationView?.recreateNavigation(for: type)
+        let isHidden = navigationView?.hidden ?? false
+        navigationView?.recreateNavigation(for: type, hidden: isHidden)
         evaluateInfoBarStatus(animated: true)
         navigationControllerDelegate?.navigationDidAppear(controller: self)
     }
@@ -239,7 +246,8 @@ import UIKit
             self.hideCategories(animated: animated)
         })
         
-        self.evaluateInfoBarStatus(animated: false)
+        infoBarStatus = infoBarDelegate?.didRequestInfoBarStatus() ?? .hidden
+        evaluateInfoBarStatus(animated: false)
     }
     
     public func navigationController(_ navigationController: UINavigationController,

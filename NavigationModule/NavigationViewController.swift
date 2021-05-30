@@ -37,6 +37,9 @@ import UIKit
     @objc public var titleView: UIView? {
         currentNavigationController.titleView
     }
+    @objc public var barHidden: Bool {
+        currentNavigationController.navigationHidden
+    }
     
     private var viewWillAppearTimer: Timer?
     private weak var currentViewController: UIViewController?

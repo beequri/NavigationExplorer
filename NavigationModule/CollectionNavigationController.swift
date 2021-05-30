@@ -187,7 +187,8 @@ import UIKit
             self.showCategories()
         })
         
-        self.evaluateInfoBarStatus(animated: false)
+        infoBarStatus = infoBarDelegate?.didRequestInfoBarStatus() ?? .hidden
+        evaluateInfoBarStatus(animated: false)
     }
     
     public override func navigationController(_ navigationController: UINavigationController,
