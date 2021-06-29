@@ -94,7 +94,7 @@ import NavigationExplorer
     case clock                  = 150
     case chartPie               = 151
     case waveformCircle         = 152
-    case burn                   = 153
+    case starCircle             = 153
     case fCursiveCircle         = 154
     
     case arrowsUpDownCircle     = 155
@@ -102,10 +102,6 @@ import NavigationExplorer
     case eurosignCircle         = 157
     case sterlingsignCircle     = 158
     case yensignCircle          = 159
-    case centsignCircle         = 160
-    
-    
-    
     
     static var names: [String] = [
         "heart.circle", "heart.slash.circle", "car.circle", "tram.circle", "bicycle.circle", "figure.walk.circle", "airplane.circle",
@@ -117,8 +113,8 @@ import NavigationExplorer
         "exclamationmark.circle", "questionmark.circle", "number.circle", "plusminus.circle", "doc.circle", "calendar.circle",
         "book.circle", "play.circle", "stop.circle", "moon.circle", "magnifyingglass.circle",
         "flag.circle", "location.circle", "tag.circle", "camera.circle", "lock.circle",
-        "clock", "chart.pie", "waveform.circle", "burn", "f.cursive.circle", "arrow.up.arrow.down.circle",
-        "asterisk.circle", "eurosign.circle", "sterlingsign.circle", "yensign.circle", "centsign.circle"
+        "clock", "chart.pie", "waveform.circle", "star.circle", "f.cursive.circle", "arrow.up.arrow.down.circle",
+        "asterisk.circle", "eurosign.circle", "sterlingsign.circle", "yensign.circle"
         
     ]
     
@@ -130,7 +126,7 @@ import NavigationExplorer
 
 @objc public class Items: NSObject {
     
-    var selectedTags:[Int] = [100]
+    var selectedTags:[Int] = []
     
     @objc public lazy var items: [CollectionItem] = {
         var collection: [CollectionItem] = []

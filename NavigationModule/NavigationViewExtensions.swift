@@ -33,31 +33,30 @@ extension NavigationView {
     public func showCategoriesForPortraitWithAnimation(completion: (()->())? = nil) {
         showCategoriesForPortrait(animation: true)
     }
-    
-    public func hideCategoriesForPortraitWithAnimation(completion: (()->())? = nil) {
-        hideCategoriesForPortrait(animation: true)
-    }
-    
     public func showCategoriesForPortraitWithoutAnimation() {
         showCategoriesForPortrait(animation: false)
     }
     
+    
+    public func hideCategoriesForPortraitWithAnimation(completion: (()->())? = nil) {
+        hideCategoriesForPortrait(animation: true)
+    }
     public func hideCategoriesForPortraitWithoutAnimation() {
         hideCategoriesForPortrait(animation: false)
     }
     
+    
     public func showCategoriesForLandscapeWithAnimation(completion: (()->())? = nil) {
         showCategoriesForLandscape(animation: true)
     }
-    
-    public func hideCategoriesForLandscapeWithAnimation(completion: (()->())? = nil) {
-        hideCategoriesForLandscape(animation: true)
-    }
-    
     public func showCategoriesForLandscapeWithoutAnimation() {
         showCategoriesForLandscape(animation: false)
     }
     
+    
+    public func hideCategoriesForLandscapeWithAnimation(completion: (()->())? = nil) {
+        hideCategoriesForLandscape(animation: true)
+    }
     public func hideCategoriesForLandscapeWithoutAnimation() {
         hideCategoriesForLandscape(animation: false)
     }

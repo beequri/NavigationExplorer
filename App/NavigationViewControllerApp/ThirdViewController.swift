@@ -7,9 +7,14 @@ class ThirdViewController: UIViewController {
     
     let titles1 = ["Private and Categories", "Second Navigation View"]
     let titles2 = ["Hide Navigation", "Show Navigation"]
+    let titles3 = ["Hide Categories", "Show Categories"]
+    let titles4 = ["Remove Category", "Add Category"]
     let images1 = ["arrow.right.square", "rectangle.on.rectangle"]
     let images2 = ["rectangle","rectangle.topthird.inset"]
+    let images3 = ["menubar.rectangle","macwindow"]
+    let images4 = ["circle.dashed","circle"]
     
+    var categories: Items = Items(selectedTags:[])
     var lastContentOffset: CGFloat = 0
     var infoBarStatus: InfoBarStatus  = .hidden
     var navigationViewController: NavigationViewController? {
@@ -111,13 +116,10 @@ class ThirdViewController: UIViewController {
 }
 extension ThirdViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 2
-        }
         return 2
     }
     
@@ -130,7 +132,7 @@ extension ThirdViewController: UITableViewDataSource {
             }
             cell.backgroundColor = .systemTeal
             cell.textLabel?.text = titles1[indexPath.row]
-        } else {
+        } else if indexPath.section == 1 {
             if let img = UIImage(systemName: images2[indexPath.row]) {
                 cell.imageView?.image = img
                 cell.tintColor = .white
@@ -138,6 +140,18 @@ extension ThirdViewController: UITableViewDataSource {
             cell.textLabel?.textColor = .white
             cell.backgroundColor = .systemPink
             cell.textLabel?.text = titles2[indexPath.row]
+        } else if indexPath.section == 2 {
+            if let img = UIImage(systemName: images3[indexPath.row]) {
+                cell.imageView?.image = img
+                cell.tintColor = .black
+            }
+            cell.textLabel?.text = titles3[indexPath.row]
+        } else {
+            if let img = UIImage(systemName: images4[indexPath.row]) {
+                cell.imageView?.image = img
+                cell.tintColor = .black
+            }
+            cell.textLabel?.text = titles4[indexPath.row]
         }
         return cell
     }
@@ -160,6 +174,28 @@ extension ThirdViewController: UITableViewDelegate {
                 navigationViewController?.setNavigationBarHidden(false, animated: true)
             }
         }
+        
+        if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                navigationViewController?.setCollectionScrollViewHidden(true)
+            }
+            
+            if indexPath.row == 1 {
+                navigationViewController?.setCollectionScrollViewHidden(false)
+            }
+        }
+        
+        if indexPath.section == 3 {
+            if indexPath.row == 0 {
+                categories = Items(selectedTags: [])
+                navigationViewController?.setCollectionScrollViewHidden(true)
+            }
+            
+            if indexPath.row == 1 {
+                categories = Items(selectedTags: [100])
+                navigationViewController?.setCollectionScrollViewHidden(false)
+            }
+        }
     }
 }
 
@@ -180,7 +216,6 @@ extension ThirdViewController:InfoBarDelegate {
 
 extension ThirdViewController:CollectionViewDelegate {
     func collectionItems() -> [CollectionItem] {
-        let categories = Items(selectedTags:[])
         return categories.selected
     }
     

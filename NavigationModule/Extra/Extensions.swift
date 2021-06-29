@@ -181,6 +181,12 @@ extension UIViewController {
     }
 }
 
+extension Bundle {
+    static func this() -> Bundle {
+        Bundle(for: NavigationViewController.self)
+    }
+}
+
 extension NavigationViewController {
     static var landscapeCategoryMargin: CGFloat {
         let safeInset = UIApplication.shared.windows[0].safeAreaInsets

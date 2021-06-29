@@ -56,7 +56,10 @@ public class CollectionView: UIView {
     var borderColorPortrait: UIColor = UIColor.label.withAlphaComponent(0.1)
     
     var categoryItems: [CollectionItem] {
-        delegate?.collectionItems() ?? []
+        if UIViewController.isLandscape {
+            return delegate?.collectionItems().reversed() ?? []
+        }
+        return delegate?.collectionItems() ?? []
     }
     
     var currentScrollHeight: CGFloat {
@@ -71,14 +74,7 @@ public class CollectionView: UIView {
     
     private var _seperator: UIView? {
         let seperator = UIView(frame: .zero)
-        switch traitCollection.userInterfaceStyle {
-        case .light, .unspecified:
-            seperator.backgroundColor = UIColor(white: 0, alpha: 0.15)
-        case .dark:
-            seperator.backgroundColor = UIColor(white: 1, alpha: 0.15)
-        @unknown default:
-            seperator.backgroundColor = UIColor(white: 0, alpha: 0.15)
-        }
+        seperator.backgroundColor = UIColor(named: "separatorColor", in:Bundle.this(), compatibleWith:nil)
         seperator.translatesAutoresizingMaskIntoConstraints = false
         return seperator
     }
@@ -265,16 +261,15 @@ extension  CollectionView: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         
+        cell.imageView.image = categoryItems[indexPath.row].image
+
         if UIViewController.isLandscape {
             // The horizontal collection would be nice to be align tor right, so reverese all
-            var cats = categoryItems
-            cats.reverse()
-            cell.imageView.image = cats[indexPath.row].image
+            let cats = categoryItems
             cell.transform = CGAffineTransform(scaleX: -1, y: 1)
             cell.imageView.tintColor = cats[indexPath.row].isSelected ? viewConfiguration.tintColor : fillColorLansdscape
             return cell
         }
-        cell.imageView.image = categoryItems[indexPath.row].image
         cell.transform = CGAffineTransform(scaleX: 1, y: 1)
         cell.imageView.tintColor = fillColorPortrait
         cell.layer.borderColor = categoryItems[indexPath.row].isSelected ? viewConfiguration.tintColor.cgColor : borderColorPortrait.cgColor

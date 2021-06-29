@@ -76,6 +76,7 @@ import UIKit
         shouldHideCategoryBar(hidden)
         shouldHideInfoBar(hidden)
     }
+
     
     public override func adjustNavigation(action: AdjustAction) {
         adjustNavigationTimer?.invalidate()
@@ -102,14 +103,18 @@ import UIKit
         })
     }
     
-    public func setCollectionScrollViewHidden(_ hidden: Bool) {
+    public func setCollectionScrollViewHidden(_ hidden: Bool, animated:Bool = true) {
         if hidden == true {
             if self.isLandscape == true {
                 self.navigationView?.hideBottomTitleForLandscapeWithAnimation()
                 return
             }
             if self.categoryViewHidden == false {
-                self.navigationView?.hideCategoriesForPortraitWithAnimation()
+                if animated {
+                    self.navigationView?.hideCategoriesForPortraitWithAnimation()
+                    return
+                }
+                self.navigationView?.hideCategoriesForPortraitWithoutAnimation()
             }
             return
         }
@@ -120,7 +125,11 @@ import UIKit
         }
         
         if self.categoryViewHidden == false {
-            self.navigationView?.showCategoriesForPortraitWithAnimation()
+            if animated {
+                self.navigationView?.showCategoriesForPortraitWithAnimation()
+                return
+            }
+            self.navigationView?.showCategoriesForPortraitWithoutAnimation()
         }
     }
     
@@ -172,7 +181,6 @@ import UIKit
                                      animated: Bool,
                                      type: NavigationType) {
         navigationView?.stateConfiguration = stateConfiguration
-        
         prepareToShow()
         if let leftButton = navigationControllerDelegate?.didRequestLeftBarButton() {
             viewController.navigationItem.setLeftBarButton(leftButton, animated: true)
@@ -215,6 +223,12 @@ extension CollectionNavigationController:CollectionViewControllerDelegate {
     }
     
     public func collectionItems() -> [CollectionItem] {
-        return categoryScrollViewDelegate?.collectionItems() ?? []
+        
+        if let items = categoryScrollViewDelegate?.collectionItems(), items.count > 0 {
+            return items
+        }
+        
+        setCollectionScrollViewHidden(true, animated: false)
+        return []
     }
 }

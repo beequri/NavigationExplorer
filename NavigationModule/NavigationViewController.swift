@@ -186,14 +186,9 @@ import UIKit
         }
     }
     
-    @objc public func setCollectionScrollViewHidden(_ hidden: Bool) {
-        switch currentNavigationController {
-        case is CollectionNavigationController:
-            collectionNavigationController.setCollectionScrollViewHidden(hidden)
-            return
-            
-        default:
-            return
+    @objc public func setCollectionScrollViewHidden(_ hidden: Bool, animated:Bool = true) {
+        if currentNavigationController is CollectionNavigationController {
+            collectionNavigationController.setCollectionScrollViewHidden(hidden, animated: animated)
         }
     }
     
@@ -202,7 +197,6 @@ import UIKit
     private func notifyViewWillAppear() {
         viewWillAppearTimer?.invalidate()
         viewWillAppearTimer = Timer.scheduledTimer(withTimeInterval: 0.0, repeats: false, block: { _ in
-            
             guard let viewController = self.viewControllers.last else {
                 return
             }

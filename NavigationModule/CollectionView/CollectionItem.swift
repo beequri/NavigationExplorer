@@ -65,4 +65,8 @@ import UIKit
             return unselectedImage
         }
     }
+    
+    public override var description: String {
+        "tag: \(tag), isSelected: \(isSelected)"
+    }
 }
