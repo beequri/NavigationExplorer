@@ -145,6 +145,7 @@ extension ThirdViewController: UITableViewDataSource {
                 cell.imageView?.image = img
                 cell.tintColor = .black
             }
+            cell.backgroundColor = .lightGray
             cell.textLabel?.text = titles3[indexPath.row]
         } else {
             if let img = UIImage(systemName: images4[indexPath.row]) {

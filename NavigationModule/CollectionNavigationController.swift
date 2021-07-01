@@ -192,7 +192,9 @@ import UIKit
         
         showHideCategoriesTimer?.invalidate()
         showHideCategoriesTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { _ in
-            self.showCategories()
+            if let items = self.categoryScrollViewDelegate?.collectionItems(), items.count > 0 {
+                self.showCategories()
+            }
         })
         
         infoBarStatus = infoBarDelegate?.didRequestInfoBarStatus() ?? .hidden
@@ -223,12 +225,6 @@ extension CollectionNavigationController:CollectionViewControllerDelegate {
     }
     
     public func collectionItems() -> [CollectionItem] {
-        
-        if let items = categoryScrollViewDelegate?.collectionItems(), items.count > 0 {
-            return items
-        }
-        
-        setCollectionScrollViewHidden(true, animated: false)
-        return []
+        return categoryScrollViewDelegate?.collectionItems() ?? []
     }
 }
