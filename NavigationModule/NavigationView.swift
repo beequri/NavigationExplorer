@@ -293,10 +293,12 @@ class NavigationView {
     public func showCategoriesForLandscape(animation:Bool) {
         if animation == false {
             collectionView?.slideInWithoutAnimation()
+            collectionView?.loadCategories()
             return
         }
         
         collectionView?.slideInWithAnimation()
+        collectionView?.loadCategories()
     }
     
     public func showCategoriesForPortrait(animation:Bool) {

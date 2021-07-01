@@ -106,7 +106,7 @@ import UIKit
     public func setCollectionScrollViewHidden(_ hidden: Bool, animated:Bool = true) {
         if hidden == true {
             if self.isLandscape == true {
-                self.navigationView?.hideBottomTitleForLandscapeWithAnimation()
+                self.navigationView?.hideCategoriesForLandscapeWithAnimation()
                 return
             }
             if self.categoryViewHidden == false {
@@ -120,7 +120,7 @@ import UIKit
         }
         
         if self.isLandscape == true {
-            self.navigationView?.showBottomTitleForLandscapeWithAnimation()
+            self.navigationView?.showCategoriesForLandscapeWithAnimation()
             return
         }
         
