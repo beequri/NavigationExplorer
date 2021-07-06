@@ -70,11 +70,4 @@ extension NavigationView {
     var loginShadowHeight: CGFloat {
         return isLandscape == true ? 120.0 : 20.0
     }
-    
-    var currentScrollHeight: CGFloat {
-        if stateConfiguration.categoryBarHidden == true {
-            return 0.0
-        }
-        return scrollHeight
-    }
 }

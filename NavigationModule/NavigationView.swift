@@ -323,7 +323,7 @@ class NavigationView {
         }
         
         collectionView?.updateHeight(height:scrollHeight)
-        blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight)
+        blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight + currentScrollHeight)
         self.__infoContainerBarTranformY = defaultValue
         
         if animation == false {
@@ -745,6 +745,16 @@ extension NavigationView {
     
     public var navigationHeightWithoutStatusBar: CGFloat {
         navigationViewController?.navigationHeightWithoutStatusBar ?? 0
+    }
+    
+    /// Current height of the scroll bar.
+    /// If scroll bar is not shown the height will return 0 otherwise the true height of displayed scroll bar will be returned
+    
+    public var currentScrollHeight: CGFloat {
+        if stateConfiguration.categoryBarHidden == true {
+            return 0.0
+        }
+        return scrollHeight
     }
     
     /// Current height of the info bar.
