@@ -41,18 +41,17 @@ import UIKit
     var categoryViewHidden: Bool = false
     
     @objc public override var expectedTopOffset: CGFloat {
-        
-        if currentInfoBarStatus == .shown {
-            return navigationView!.systemNavigationContentHeight + loginBarHeight
+        if UIViewController.isLandscape {
+            return navigationView!.navigationHeightWithoutStatusBar + infoBarHeight
         }
-        return navigationView!.systemNavigationContentHeight
+        return navigationView!.portraitNavigationContentHeight + infoBarHeight
     }
     
     @objc public override var expectedNavigationHeight: CGFloat {
         if UIViewController.isLandscape {
-            return navigationView!.systemNavigationContentHeight + loginBarHeight + 10
+            return navigationView!.navigationHeightWithoutStatusBar + infoBarHeight + 10
         }
-        return navigationView!.categoryavigationTotalHeight
+        return navigationView!.portraitNavigationContentHeight + infoBarHeight + 10
     }
     
     override var stateConfiguration: NavigationStateConfiguration {
@@ -195,6 +194,7 @@ import UIKit
             if let items = self.categoryScrollViewDelegate?.collectionItems(), items.count > 0 {
                 self.showCategories()
             }
+            self.navigationControllerDelegate?.navigationDidUpdate(controller: self)
         })
         
         infoBarStatus = infoBarDelegate?.didRequestInfoBarStatus() ?? .hidden

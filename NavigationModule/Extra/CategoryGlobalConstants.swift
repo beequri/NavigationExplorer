@@ -50,7 +50,7 @@ import UIKit
 
 let scrollHeight: CGFloat = 50.0
 let barBottomMargin: CGFloat = 10.0
-let loginBarHeight: CGFloat = 24.0
+let infoBarHeight: CGFloat = 24.0
 
 // UI
 let ladscapeShadowRadius: CGFloat = 30.0

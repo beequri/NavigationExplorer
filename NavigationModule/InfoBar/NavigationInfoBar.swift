@@ -93,7 +93,7 @@ import UIKit
         let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapInfoBar))
         infoBar.addGestureRecognizer(gesture)
         
-        let equalSide: CGFloat = loginBarHeight - 6
+        let equalSide: CGFloat = infoBarHeight - 6
         infoBar.addSubview(icon)
         infoBar.addConstraints(subview: icon, top: 2, right: nil, bottom: nil, left: 10, height: equalSide, width: equalSide)
 
@@ -115,8 +115,8 @@ import UIKit
         infoContainer.clipsToBounds = true
         infoContainer.translatesAutoresizingMaskIntoConstraints = false
         infoContainer.addSubview(login)
-        infoContainer.addConstraints(subview: login, top: 0, right: 0, bottom: nil, left: 0, height: loginBarHeight, width: nil)
-        login.transform = CGAffineTransform(translationX: 0, y: loginBarHeight * -1)
+        infoContainer.addConstraints(subview: login, top: 0, right: 0, bottom: nil, left: 0, height: infoBarHeight, width: nil)
+        login.transform = CGAffineTransform(translationX: 0, y: infoBarHeight * -1)
         return infoContainer
     }
     

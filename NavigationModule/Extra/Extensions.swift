@@ -201,18 +201,18 @@ extension NavigationViewController {
     }
     
     /**
-            Height of the navigation bar including status bar
+        Height of the navigation bar including status bar
      */
-    var totalHeight: CGFloat {
+    var navigationHeightWithStatusBar: CGFloat {
         var top = navigationBar.frame.height
         top += UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         return top
     }
     
     /**
-            Height of the navigation bar without status bar
+        Height of the navigation bar without status bar
      */
-    var contentHeight: CGFloat {
+    var navigationHeightWithoutStatusBar: CGFloat {
         return navigationBar.frame.height
     }
     

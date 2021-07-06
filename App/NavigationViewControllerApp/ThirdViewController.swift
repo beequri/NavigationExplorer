@@ -236,11 +236,11 @@ extension ThirdViewController:NavigationControllerDelegate {
     
     func navigationDidUpdate(controller: PlainNavigationController) {
         UIView.animate(withDuration: 0.25) {
-            self.tableView.contentInset = UIEdgeInsets(top: controller.expectedTopOffset, left: 0, bottom: 0, right: 0)
-        } completion: { _ in
             if self.tableView.contentOffset.y < 100 {
                 self.tableView.setContentOffset(CGPoint(x:0, y: -1 * controller.expectedNavigationHeight), animated: true)
             }
+        } completion: { _ in
+            self.tableView.contentInset = UIEdgeInsets(top: controller.expectedTopOffset, left: 0, bottom: 0, right: 0)
         }
     }
     

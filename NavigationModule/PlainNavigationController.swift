@@ -66,7 +66,7 @@ import UIKit
     
     @objc public var expectedTopOffset: CGFloat {
         if currentInfoBarStatus == .shown {
-            return loginBarHeight
+            return infoBarHeight
         }
         return 0
     }

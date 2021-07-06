@@ -149,7 +149,7 @@ class NavigationView {
     public func setNavigationBarHidden(_ isHidden: Bool) {
         
         if isHidden {
-            let retractionValue                 = (loginBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
+            let retractionValue                 = (infoBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
             bar?.transform                      = CGAffineTransform(translationX: 0, y: retractionValue)
             infoContainerBar?.transform         = CGAffineTransform(translationX: 0, y: retractionValue)
             blurView?.transform                 = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -171,7 +171,7 @@ class NavigationView {
                                navigationType: NavigationType,
                                completion: (()->())? = nil) {
         let isHidden = hidden
-        let retractionValue = (loginBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
+        let retractionValue = (infoBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
         
         coordinator.animate(alongsideTransition: { context in
             self.bar?.transform                     = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -323,7 +323,7 @@ class NavigationView {
         }
         
         collectionView?.updateHeight(height:scrollHeight)
-        blurView?.updateConstraint(attribute: .height, constant: currentNavigationHeight)
+        blurView?.updateConstraint(attribute: .height, constant: absoluteNavigationHeight)
         self.__infoContainerBarTranformY = defaultValue
         
         if animation == false {
@@ -386,22 +386,22 @@ class NavigationView {
     // MARK: Private
     
     private func revealInfoBarWithoutAnimation() {
-        let constant = isLandscape ? loginShadowHeight : loginShadowHeight + loginBarHeight
+        let constant = isLandscape ? loginShadowHeight : loginShadowHeight + infoBarHeight
         infoContainerBar?.updateConstraint(attribute: .height, constant: constant)
         infoBar?.transform = CGAffineTransform(translationX: 0, y: 0)
         if isLandscape {
-            bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: loginBarHeight)
+            bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: infoBarHeight)
         }
         view?.layoutIfNeeded()
     }
     
     private func revealInfoBarWithAnimation(completion:(()->())?) {
-        let constant = isLandscape ? loginShadowHeight : loginShadowHeight + loginBarHeight
+        let constant = isLandscape ? loginShadowHeight : loginShadowHeight + infoBarHeight
         infoContainerBar?.updateConstraint(attribute: .height, constant: constant)
         UIView.animate(withDuration: 0.25) {
             self.infoBar?.transform = CGAffineTransform(translationX: 0, y: 0)
             if self.isLandscape {
-                self.bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: loginBarHeight)
+                self.bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: infoBarHeight)
             }
             self.view?.layoutIfNeeded()
         } completion: { _ in
@@ -411,7 +411,7 @@ class NavigationView {
     
     private func hideInfoBarWithoutAnimation() {
         infoContainerBar?.updateConstraint(attribute: .height, constant: loginShadowHeight)
-        infoBar?.transform = CGAffineTransform(translationX: 0, y: loginBarHeight * -1)
+        infoBar?.transform = CGAffineTransform(translationX: 0, y: infoBarHeight * -1)
         if isLandscape {
             bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: 0)
         }
@@ -421,7 +421,7 @@ class NavigationView {
     private func hideInfoBarWithAnimation(completion:(()->())?) {
         infoContainerBar?.updateConstraint(attribute: .height, constant: loginShadowHeight)
         UIView.animate(withDuration: 0.25) {
-            self.infoBar?.transform = CGAffineTransform(translationX: 0, y: loginBarHeight * -1)
+            self.infoBar?.transform = CGAffineTransform(translationX: 0, y: infoBarHeight * -1)
             if self.isLandscape {
                 self.bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: 0)
             }
@@ -584,7 +584,7 @@ class NavigationView {
     private func showPortraitNavigation(animated: Bool, hidden: Bool) {
         showPortraitNavigation()
         
-        let retractionValue = (loginBarHeight + loginShadowHeight + currentScrollHeight + systemNavigationTotalHeight) * -1
+        let retractionValue = (infoBarHeight + loginShadowHeight + currentScrollHeight + systemNavigationTotalHeight) * -1
         if hidden {
             blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
             bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -654,7 +654,7 @@ class NavigationView {
     private func showLandscapeNavigation(animated: Bool, hidden: Bool) {
         showLandscapeNavigation()
         
-        let retractionValue = (loginBarHeight + loginShadowHeight + systemNavigationTotalHeight) * -1
+        let retractionValue = (infoBarHeight + loginShadowHeight + systemNavigationTotalHeight) * -1
         if hidden == true {
             infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
             blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -710,34 +710,58 @@ class NavigationView {
 
 // MARK: - Shortcuts
 extension NavigationView {
-    // MARK: Public
-    public var currentNavigationHeight: CGFloat {
-        systemNavigationTotalHeight + currentScrollHeight
+    
+    // MARK: - Navigation properties
+    
+    /// Absolute height of the collection navigation includes
+    /// - system defined height of the navigation bar,
+    /// - status bar
+    /// - scroll height
+    /// - info bar
+    
+    public var absoluteCollectionNavigationHeight: CGFloat {
+        absoluteSystemNavigationHeight + scrollHeight + infoBarHeight
     }
     
-    public var systemNavigationContentHeight: CGFloat {
-        navigationViewController?.contentHeight ?? 0
+    /// Absolute height of the collection navigation includes
+    /// - system defined height of the navigation bar,
+    /// - status bar
+    /// - info bar
+    
+    public var absolutePlainNavigationHeight: CGFloat {
+        absoluteSystemNavigationHeight + infoBarHeight
     }
     
-    public var systemNavigationTotalHeight: CGFloat {
-        navigationViewController?.totalHeight ?? 0
+    
+    /// Absolute height of the system navigation includes
+    /// - system defined height of the navigation bar,
+    /// - status bar
+    
+    public var absoluteSystemNavigationHeight: CGFloat {
+        navigationViewController?.navigationHeightWithStatusBar ?? 0
     }
     
-    public var categoryavigationTotalHeight: CGFloat {
-        systemNavigationTotalHeight + currentScrollHeight
+    /// Height of the system navigation bar without status bar
+    
+    public var navigationHeightWithoutStatusBar: CGFloat {
+        navigationViewController?.navigationHeightWithoutStatusBar ?? 0
     }
     
-    public var categoryavigationContentHeight: CGFloat {
-        systemNavigationContentHeight + currentScrollHeight
+    /// Current height of the info bar.
+    /// If info bar is not shown the height will return 0 otherwise the true height of displayed info bar will be returned
+    
+    private var currentInfoBarHeight: CGFloat {
+        return privacyStatus == .shown ? infoBarHeight : 0
     }
+    
+    public var portraitNavigationContentHeight: CGFloat {
+        __infoContainerBarTranformY
+    }
+    
+    // MARK: - Views
     
     public var infoContainerBar: UIView? {
         navigationInfoBar?.infoContainerBar
-    }
-    
-    // MARK: Private
-    private var currentInfoBarHeight: CGFloat {
-        return privacyStatus == .shown ? loginBarHeight : 0
     }
     
     private var infoBar: UIView? {
