@@ -41,17 +41,11 @@ import UIKit
     var categoryViewHidden: Bool = false
     
     @objc public override var expectedTopOffset: CGFloat {
-        if UIViewController.isLandscape {
-            return navigationView!.navigationHeightWithoutStatusBar + infoBarHeight
-        }
-        return navigationView!.portraitNavigationContentHeight + infoBarHeight
+        navigationView!.expectedContentTopOffset
     }
     
     @objc public override var expectedNavigationHeight: CGFloat {
-        if UIViewController.isLandscape {
-            return navigationView!.navigationHeightWithoutStatusBar + infoBarHeight + 10
-        }
-        return navigationView!.portraitNavigationContentHeight + infoBarHeight + 10
+        navigationView!.expewctedNavigationHeight
     }
     
     override var stateConfiguration: NavigationStateConfiguration {

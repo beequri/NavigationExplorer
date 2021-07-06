@@ -764,8 +764,18 @@ extension NavigationView {
         return privacyStatus == .shown ? infoBarHeight : 0
     }
     
-    public var portraitNavigationContentHeight: CGFloat {
-        __infoContainerBarTranformY
+    public var expectedContentTopOffset: CGFloat {
+        if UIViewController.isLandscape {
+            return navigationHeightWithoutStatusBar + infoBarHeight
+        }
+        return __infoContainerBarTranformY + infoBarHeight
+    }
+    
+    public var expewctedNavigationHeight: CGFloat {
+        if UIViewController.isLandscape {
+            return navigationHeightWithoutStatusBar + infoBarHeight + 10
+        }
+        return currentScrollHeight + __infoContainerBarTranformY + infoBarHeight + 10
     }
     
     // MARK: - Views
