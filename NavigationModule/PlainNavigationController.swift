@@ -72,7 +72,7 @@ import UIKit
     }
     
     @objc public var expectedNavigationHeight: CGFloat {
-        return navigationView!.systemNavigationTotalHeight
+        return navigationView!.absoluteSystemNavigationHeight
     }
     
     @objc public var infoBar: NavigationInfoBar? {
@@ -263,7 +263,7 @@ import UIKit
 
 extension PlainNavigationController:CollectionViewControllerDataSource {
     public var cellSize: CGSize {
-        guard let height = navigationView?.systemNavigationTotalHeight else {
+        guard let height = navigationView?.absoluteSystemNavigationHeight else {
             return .zero
         }
         let size = isLandscape ? height - 4 : scrollHeight - barBottomMargin

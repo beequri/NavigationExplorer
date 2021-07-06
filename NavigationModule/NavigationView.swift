@@ -149,7 +149,7 @@ class NavigationView {
     public func setNavigationBarHidden(_ isHidden: Bool) {
         
         if isHidden {
-            let retractionValue                 = (infoBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
+            let retractionValue                 = (infoBarHeight + loginShadowHeight + scrollHeight + absoluteSystemNavigationHeight) * -1
             bar?.transform                      = CGAffineTransform(translationX: 0, y: retractionValue)
             infoContainerBar?.transform         = CGAffineTransform(translationX: 0, y: retractionValue)
             blurView?.transform                 = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -171,7 +171,7 @@ class NavigationView {
                                navigationType: NavigationType,
                                completion: (()->())? = nil) {
         let isHidden = hidden
-        let retractionValue = (infoBarHeight + loginShadowHeight + scrollHeight + systemNavigationTotalHeight) * -1
+        let retractionValue = (infoBarHeight + loginShadowHeight + scrollHeight + absoluteSystemNavigationHeight) * -1
         
         coordinator.animate(alongsideTransition: { context in
             self.bar?.transform                     = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -316,14 +316,14 @@ class NavigationView {
         }
         
         if let constraint = blurView?.constraints.first,
-           constraint.constant == systemNavigationTotalHeight + scrollHeight,
+           constraint.constant == absoluteSystemNavigationHeight + scrollHeight,
            constraint.constant == infoContainerBar.frame.origin.y,
            infoContainerBar.transform.ty == 50.0 {
             defaultValue = scrollHeight
         }
         
         collectionView?.updateHeight(height:scrollHeight)
-        blurView?.updateConstraint(attribute: .height, constant: absoluteNavigationHeight)
+        blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight)
         self.__infoContainerBarTranformY = defaultValue
         
         if animation == false {
@@ -353,7 +353,7 @@ class NavigationView {
             defaultValue = 0
         }
         
-        if infoContainerBar.transform.ty < 50.0, infoContainerBar.frame.origin.y > systemNavigationTotalHeight {
+        if infoContainerBar.transform.ty < 50.0, infoContainerBar.frame.origin.y > absoluteSystemNavigationHeight {
             defaultValue = -scrollHeight
         }
         
@@ -366,7 +366,7 @@ class NavigationView {
         }
         
         collectionView?.updateHeight(height:0)
-        blurView?.updateConstraint(attribute: .height, constant: systemNavigationTotalHeight)
+        blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight)
         self.__infoContainerBarTranformY = defaultValue
         
         if animation == false {
@@ -531,7 +531,7 @@ class NavigationView {
     
     private func hideScrollView() {
         collectionView?.updateHeight(height:0)
-        blurView?.updateConstraint(attribute: .height, constant: systemNavigationTotalHeight)
+        blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight)
         infoContainerBar?.updateConstraints()
         view?.layoutIfNeeded()
     }
@@ -557,13 +557,13 @@ class NavigationView {
         }
         
         bar.addSubview(blurView)
-        bar.addConstraints(subview: blurView, top: minY, right: 0, bottom: nil, left: 0, height: currentScrollHeight + systemNavigationTotalHeight, width: nil)
+        bar.addConstraints(subview: blurView, top: minY, right: 0, bottom: nil, left: 0, height: currentScrollHeight + absoluteSystemNavigationHeight, width: nil)
 
         view.addSubview(separator)
-        view.addConstraints(subview: separator, top: systemNavigationTotalHeight, right: 0, bottom: nil, left: 0, height: 1.0, width: nil)
+        view.addConstraints(subview: separator, top: absoluteSystemNavigationHeight, right: 0, bottom: nil, left: 0, height: 1.0, width: nil)
         
         view.addSubview(scrollBarContainer)
-        view.addConstraints(subview: scrollBarContainer, top: systemNavigationTotalHeight, right: 0, bottom: nil, left: 0, height: scrollHeight, width: nil)
+        view.addConstraints(subview: scrollBarContainer, top: absoluteSystemNavigationHeight, right: 0, bottom: nil, left: 0, height: scrollHeight, width: nil)
         collectionView?.updateConstraints(height: scrollHeight, margin: 20.0)
         
         let yPos = blurView.constraint(attribute: .height)?.constant ?? 0
@@ -584,7 +584,7 @@ class NavigationView {
     private func showPortraitNavigation(animated: Bool, hidden: Bool) {
         showPortraitNavigation()
         
-        let retractionValue = (infoBarHeight + loginShadowHeight + currentScrollHeight + systemNavigationTotalHeight) * -1
+        let retractionValue = (infoBarHeight + loginShadowHeight + currentScrollHeight + absoluteSystemNavigationHeight) * -1
         if hidden {
             blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
             bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
@@ -625,10 +625,10 @@ class NavigationView {
         }
         
         bar.addSubview(blurView)
-        bar.addConstraints(subview: blurView, top: 0, right: 0, bottom: nil, left: 0, height: systemNavigationTotalHeight, width: nil)
+        bar.addConstraints(subview: blurView, top: 0, right: 0, bottom: nil, left: 0, height: absoluteSystemNavigationHeight, width: nil)
         
         view.addSubview(separator)
-        view.addConstraints(subview: separator, top: systemNavigationTotalHeight, right: 0, bottom: nil, left: 0, height: 1.0, width: nil)
+        view.addConstraints(subview: separator, top: absoluteSystemNavigationHeight, right: 0, bottom: nil, left: 0, height: 1.0, width: nil)
         
         let blurViewHeight = blurView.constraint(attribute: .height)?.constant
 
@@ -654,7 +654,7 @@ class NavigationView {
     private func showLandscapeNavigation(animated: Bool, hidden: Bool) {
         showLandscapeNavigation()
         
-        let retractionValue = (infoBarHeight + loginShadowHeight + systemNavigationTotalHeight) * -1
+        let retractionValue = (infoBarHeight + loginShadowHeight + absoluteSystemNavigationHeight) * -1
         if hidden == true {
             infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
             blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
