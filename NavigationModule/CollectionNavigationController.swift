@@ -128,13 +128,11 @@ import UIKit
     
     // MARK: - Private
     
-    private func showCategories() {
-        isLandscape
-            ? navigationView?.showCategoriesForLandscapeWithAnimation()
-            : navigationView?.showCategoriesForPortraitWithAnimation()
-    }
-    
     private func showCategoriesIfNeeded() {
+        if let items = self.categoryScrollViewDelegate?.collectionItems(), items.count > 0 {
+            categoryViewHidden = false
+        }
+        
         guard categoryViewHidden == false else {
             return
         }
@@ -144,6 +142,10 @@ import UIKit
     }
     
     private func hideCategoriesIfNeeded() {
+        if let items = self.categoryScrollViewDelegate?.collectionItems(), items.count == 0 {
+            categoryViewHidden = true
+        }
+        
         guard categoryViewHidden == true else {
             return
         }
@@ -160,6 +162,7 @@ import UIKit
         }
         
         navigationView?.willTransition(to: newCollection, with: coordinator, navigationType: .privacyCategories, completion: {
+            self.hideCategoriesIfNeeded()
             self.navigationView?.collectionViewControllerDelegate = self
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 self.evaluateInfoBarStatus(animated: true)
@@ -185,9 +188,7 @@ import UIKit
         
         showHideCategoriesTimer?.invalidate()
         showHideCategoriesTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { _ in
-            if let items = self.categoryScrollViewDelegate?.collectionItems(), items.count > 0 {
-                self.showCategories()
-            }
+            self.hideCategoriesIfNeeded()
             self.navigationControllerDelegate?.navigationDidUpdate(controller: self)
         })
         
