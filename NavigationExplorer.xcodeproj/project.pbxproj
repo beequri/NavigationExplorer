@@ -27,6 +27,7 @@
 		F858E51F25CD72E5006FF06F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F858E51E25CD72E5006FF06F /* Extensions.swift */; };
 		F89A59CD25D5CD34008C1830 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F89A59CC25D5CD34008C1830 /* Assets.xcassets */; };
 		F8B55DC9260DBF240089E529 /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B55DC8260DBF240089E529 /* NavigationTitleView.swift */; };
+		F8DEF82C26B91A300030162F /* PortraitNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F8DEF82B26B91A300030162F /* PortraitNavigationView.xib */; };
 		F8E1DFD82603380300EFF9FC /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E1DFD72603380300EFF9FC /* CollectionView.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,7 @@
 		F858E51E25CD72E5006FF06F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F89A59CC25D5CD34008C1830 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F8B55DC8260DBF240089E529 /* NavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitleView.swift; sourceTree = "<group>"; };
+		F8DEF82B26B91A300030162F /* PortraitNavigationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PortraitNavigationView.xib; sourceTree = "<group>"; };
 		F8E1DFD72603380300EFF9FC /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,6 +177,7 @@
 				F825C65726305C6800281BC2 /* NavigationViewExtensions.swift */,
 				F8137C15261A569C0037557B /* NavigationViewController.swift */,
 				F8137C3D261A5DA90037557B /* Supporting Files */,
+				F8DEF82B26B91A300030162F /* PortraitNavigationView.xib */,
 			);
 			path = NavigationModule;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 			files = (
 				F8588B7F26465EF1000DF7AE /* CollectionViewCell.xib in Resources */,
 				F89A59CD25D5CD34008C1830 /* Assets.xcassets in Resources */,
+				F8DEF82C26B91A300030162F /* PortraitNavigationView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

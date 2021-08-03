@@ -32,9 +32,21 @@ import UIKit
 class NavigationView {
     
     private weak var currentViewController: UIViewController?
+    
+    public weak var collectionViewControllerDataSource:CollectionViewControllerDataSource?
+    public var collectionViewControllerDelegate:CollectionViewControllerDelegate? {
+        get {
+            return collectionView?.delegate
+        }
+        set {
+            collectionView?.delegate = newValue
+        }
+    }
+    
     private weak var navigationViewController: NavigationViewController?
     
     @objc public var navigationInfoBar: NavigationInfoBar?
+    @objc public var collectionView: CollectionView?
     @objc public var hidden: Bool {
         get {
             guard let bar = bar else {
@@ -111,6 +123,7 @@ class NavigationView {
         styling()
         viewSetup()
         createBar(animated: false, hidden: false)
+        collectionView?.loadCategories()
     }
     
     public func updateTitleView(animated: Bool) {
@@ -267,6 +280,26 @@ class NavigationView {
         }
     }
     
+    public func hideCategoriesForLandscape(animation:Bool) {
+        if animation == false {
+            collectionView?.slideOffWithoutAnimation()
+            return
+        }
+        
+        collectionView?.slideOffWithAnimation()
+    }
+    
+    public func showCategoriesForLandscape(animation:Bool) {
+        if animation == false {
+            collectionView?.slideInWithoutAnimation()
+            collectionView?.loadCategories()
+            return
+        }
+        
+        collectionView?.slideInWithAnimation()
+        collectionView?.loadCategories()
+    }
+    
     public func showCategoriesForPortrait(animation:Bool) {
         guard let infoContainerBar = infoContainerBar else {
             return
@@ -288,6 +321,7 @@ class NavigationView {
             defaultValue = scrollHeight
         }
         
+        collectionView?.updateHeight(height:scrollHeight)
         blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight + currentScrollHeight)
         self.__infoContainerBarTranformY = defaultValue
         
@@ -295,6 +329,7 @@ class NavigationView {
             self.infoContainerBar?.transform = CGAffineTransform(translationX: 0, y: defaultValue)
             self.bottomLine?.alpha = 0
             self.view?.layoutIfNeeded()
+            self.collectionView?.loadCategories()
             return
         }
         
@@ -303,6 +338,7 @@ class NavigationView {
             self.bottomLine?.alpha = 0
             self.view?.layoutIfNeeded()
         } completion: { _ in
+            self.collectionView?.loadCategories()
         }
     }
     
@@ -320,12 +356,15 @@ class NavigationView {
             defaultValue = -scrollHeight
         }
         
-        if infoContainerBar.transform.ty < 0 {
+        if let scrollBarHeight = collectionView?.currentScrollHeight,
+           scrollBarHeight == 0,
+           infoContainerBar.transform.ty < 0 {
             // scroll bar has been temorarily hidden
             // and privacy bar is in correct postion
             return
         }
         
+        collectionView?.updateHeight(height:0)
         blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight)
         self.__infoContainerBarTranformY = defaultValue
         
@@ -415,6 +454,7 @@ class NavigationView {
     
     private func updateToCategories() {
         updateToCustomView()
+        collectionView?.scrollBar?.reloadData()
     }
     
     private func updateNavigationTitleView() {
@@ -435,6 +475,8 @@ class NavigationView {
     private func prepareControllers() {
         let categoryViewController = CollectionView(stateConfiguration: stateConfiguration,
                                                     viewConfiguration: viewConfiguration)
+        collectionView = categoryViewController
+        collectionView?.dataSource = collectionViewControllerDataSource
         
         let infoBarController = NavigationInfoBar(viewConfiguration: viewConfiguration)
         navigationInfoBar = infoBarController
@@ -461,6 +503,7 @@ class NavigationView {
         // Privacy bar
         navigationInfoBar?.setup()
         bottomTitleView?.setup()
+        collectionView?.setup()
         
         // main views
         blurView = _blurView
@@ -481,10 +524,12 @@ class NavigationView {
         upperTitleView = nil
         
         bottomTitleView?.clean()
+        collectionView?.clean()
         navigationInfoBar?.clean()
     }
     
     private func hideScrollView() {
+        collectionView?.updateHeight(height:0)
         blurView?.updateConstraint(attribute: .height, constant: absoluteSystemNavigationHeight)
         infoContainerBar?.updateConstraints()
         view?.layoutIfNeeded()
@@ -505,6 +550,7 @@ class NavigationView {
               let minY = navigationViewController?.topPadding,
               let blurView = blurView,
               let separator = bottomLine,
+              let scrollBarContainer = scrollBarContainer,
               let infoContainerBar = infoContainerBar else {
             return
         }
@@ -515,9 +561,16 @@ class NavigationView {
         view.addSubview(separator)
         view.addConstraints(subview: separator, top: absoluteSystemNavigationHeight, right: 0, bottom: nil, left: 0, height: 1.0, width: nil)
         
+        view.addSubview(scrollBarContainer)
+        view.addConstraints(subview: scrollBarContainer, top: absoluteSystemNavigationHeight, right: 0, bottom: nil, left: 0, height: scrollHeight, width: nil)
+        collectionView?.updateConstraints(height: scrollHeight, margin: 20.0)
+        
         let yPos = blurView.constraint(attribute: .height)?.constant ?? 0
         view.addSubview(infoContainerBar)
         view.addConstraints(subview: infoContainerBar, top: yPos, right: 0, bottom: nil, left: 0, height: loginShadowHeight, width: nil)
+        
+        scrollBarContainer.layoutIfNeeded()
+        collectionView?.upadateMaskIfNeeded()
         
         separator.alpha = 0
         
@@ -534,6 +587,7 @@ class NavigationView {
         if hidden {
             blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
             bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
+            scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
             infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
             return
         }
@@ -544,12 +598,14 @@ class NavigationView {
         
         blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
         bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
+        scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
         infoContainerBar?.alpha         = 0
         
         UIView.animate(withDuration: 0.25) {
             self.bar?.transform                 = CGAffineTransform(translationX: 0, y: 0)
             self.blurView?.transform            = CGAffineTransform(translationX: 0, y: 0)
             self.bottomLine?.transform          = CGAffineTransform(translationX: 0, y: 0)
+            self.scrollBarContainer?.transform  = CGAffineTransform(translationX: 0, y: 0)
             self.infoContainerBar?.alpha        = 1
         }
     }
@@ -557,8 +613,11 @@ class NavigationView {
     private func showLandscapeNavigation() {
         guard let bar = bar,
               let view = view,
+              let minY = navigationViewController?.topPadding,
+              let landscapeCategoryMargin = navigationViewController?.landscapeCategoryMargin,
               let blurView = blurView,
               let separator = bottomLine,
+              let scrollBarContainer = scrollBarContainer,
               let infoContainerBar = infoContainerBar,
               let bottomTitleContainer = bottomTitleContainer else {
             return
@@ -571,6 +630,12 @@ class NavigationView {
         view.addConstraints(subview: separator, top: absoluteSystemNavigationHeight, right: 0, bottom: nil, left: 0, height: 1.0, width: nil)
         
         let blurViewHeight = blurView.constraint(attribute: .height)?.constant
+
+        view.addSubview(scrollBarContainer)
+        let rightMargin = landscapeCategoryMargin * -1
+        let leftMargin = landscapeCategoryMargin
+        view.addConstraints(subview: scrollBarContainer, top: minY, right: rightMargin, bottom: nil, left: leftMargin, height: blurViewHeight, width: nil)
+        collectionView?.updateConstraints(height: blurViewHeight ?? 0, margin: 40.0)
         
         view.addSubview(infoContainerBar)
         view.addConstraints(subview: infoContainerBar, top: blurViewHeight, right: 0, bottom: nil, left: 0, height: loginShadowHeight, width: nil)
@@ -578,6 +643,10 @@ class NavigationView {
         infoContainerBar.addSubview(bottomTitleContainer)
         infoContainerBar.addConstraints(subview: bottomTitleContainer, top:0, right: 0, bottom: 0, left: 0, height: nil, width: nil)
         
+        scrollBarContainer.layoutIfNeeded()
+        
+        collectionView?.upadateMaskIfNeeded()
+        collectionView?.hideWithoutAnimationIfNeeded()
         hideTitleIfNeeded()
     }
     
@@ -588,6 +657,7 @@ class NavigationView {
         if hidden == true {
             infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
             blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
+            scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
             bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
             bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: retractionValue)
             return
@@ -599,6 +669,7 @@ class NavigationView {
         
         infoContainerBar?.transform     = CGAffineTransform(translationX: 0, y: retractionValue)
         blurView?.transform             = CGAffineTransform(translationX: 0, y: retractionValue)
+        scrollBarContainer?.transform   = CGAffineTransform(translationX: 0, y: retractionValue)
         bottomLine?.transform           = CGAffineTransform(translationX: 0, y: retractionValue)
         bottomTitleContainer?.transform = CGAffineTransform(translationX: 0, y: retractionValue)
         
@@ -606,6 +677,7 @@ class NavigationView {
             self.bar?.transform                     = CGAffineTransform(translationX: 0, y: 0)
             self.infoContainerBar?.transform        = CGAffineTransform(translationX: 0, y: 0)
             self.blurView?.transform                = CGAffineTransform(translationX: 0, y: 0)
+            self.scrollBarContainer?.transform      = CGAffineTransform(translationX: 0, y: 0)
             self.bottomLine?.transform              = CGAffineTransform(translationX: 0, y: 0)
             self.bottomTitleContainer?.transform    = CGAffineTransform(translationX: 0, y: 0)
             self.bottomLine?.alpha                  = 1
@@ -729,6 +801,10 @@ extension NavigationView {
     
     private var bottomTitleLabel: UILabel? {
         bottomTitleView?.bottomTitleLabel
+    }
+    
+    private var scrollBarContainer: UIView? {
+        collectionView?.scrollBarContainer
     }
 }
 
