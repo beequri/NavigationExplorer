@@ -92,7 +92,7 @@ public class CollectionView: UIView {
         }
         
         let scrollBar = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        scrollBar.clipsToBounds = false
+        scrollBar.clipsToBounds = true
         scrollBar.backgroundColor = .clear
         scrollBar.delegate = self
         scrollBar.dataSource = self
@@ -112,8 +112,9 @@ public class CollectionView: UIView {
             return nil
         }
         
-        let scrollBarContainer = TouchTransparentView(frame: .zero)
+        let scrollBarContainer = UIView(frame: .zero)
         scrollBarContainer.translatesAutoresizingMaskIntoConstraints = false
+        scrollBarContainer.clipsToBounds = true
         scrollBarContainer.addSubview(scrollBar)
         
         return scrollBarContainer
