@@ -108,15 +108,15 @@ import UIKit
     }
     
     private var _infoContainerBar: UIView? {
-        guard let login = infoBar else {
+        guard let infoBar = infoBar else {
             return nil
         }
-        let infoContainer = TouchTransparentView(frame: .zero)
+        let infoContainer = UIView(frame: .zero)
         infoContainer.clipsToBounds = true
         infoContainer.translatesAutoresizingMaskIntoConstraints = false
-        infoContainer.addSubview(login)
-        infoContainer.addConstraints(subview: login, top: 0, right: 0, bottom: nil, left: 0, height: infoBarHeight, width: nil)
-        login.transform = CGAffineTransform(translationX: 0, y: infoBarHeight * -1)
+        infoContainer.addSubview(infoBar)
+        infoContainer.addConstraints(subview: infoBar, top: 0, right: 0, bottom: nil, left: 0, height: infoBarHeight, width: nil)
+        infoBar.transform = CGAffineTransform(translationX: 0, y: infoBarHeight * -1)
         return infoContainer
     }
     

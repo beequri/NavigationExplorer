@@ -14,7 +14,7 @@ class ThirdViewController: UIViewController {
     let images3 = ["menubar.rectangle","macwindow"]
     let images4 = ["circle.dashed","circle"]
     
-    var categories: Items = Items(selectedTags:[])
+    var categories: Items = Items(selectedTags:[101])
     var lastContentOffset: CGFloat = 0
     var infoBarStatus: InfoBarStatus  = .hidden
     var navigationViewController: NavigationViewController? {

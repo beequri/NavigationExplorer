@@ -92,7 +92,7 @@ public class CollectionView: UIView {
         }
         
         let scrollBar = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        scrollBar.clipsToBounds = true
+        scrollBar.clipsToBounds = false
         scrollBar.backgroundColor = .clear
         scrollBar.delegate = self
         scrollBar.dataSource = self
@@ -112,9 +112,8 @@ public class CollectionView: UIView {
             return nil
         }
         
-        let scrollBarContainer = UIView(frame: .zero)
+        let scrollBarContainer = TouchTransparentView(frame: .zero)
         scrollBarContainer.translatesAutoresizingMaskIntoConstraints = false
-        scrollBarContainer.clipsToBounds = true
         scrollBarContainer.addSubview(scrollBar)
         
         return scrollBarContainer
@@ -136,18 +135,6 @@ public class CollectionView: UIView {
     //MARK: Public
     func loadCategories() {
         scrollBar?.reloadData()
-    }
-    
-    func upadateMaskIfNeeded() {
-        guard let scrollBarContainer = scrollBarContainer, UIViewController.isPad == false else {
-            return
-        }
-
-        let mask = maskImage
-        let maskView = UIImageView(frame: scrollBarContainer.bounds)
-        maskView.image = mask
-        maskView.contentMode = .scaleToFill
-        scrollBarContainer.mask = maskView
     }
     
     func setup() {
